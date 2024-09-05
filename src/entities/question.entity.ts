@@ -17,7 +17,7 @@ export class Question extends BaseEntity {
     enum: QuestionType,
     default: QuestionType.SINGLE_CHOICE
   })
-  public type: number;
+  public type: string;
 
   @Column({
     type: 'varchar',

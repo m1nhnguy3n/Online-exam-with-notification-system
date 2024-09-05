@@ -11,7 +11,8 @@ export class Exam extends BaseEntity {
   @Column({
     type: 'varchar',
     nullable: false,
-    length: 255
+    length: 255,
+    unique: true
   })
   public name: string;
 
