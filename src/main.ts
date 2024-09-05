@@ -20,11 +20,9 @@ async function bootstrap() {
       exceptionFactory: (errors: ValidationError[]) =>
         new BadRequestException({
           message: ERRORS_DICTIONARY.VALIDATION_ERROR,
-          details: errors
-            .map((error) => Object.values(error.constraints))
-            .flat(),
-        }),
-    }),
+          details: errors.map((error) => Object.values(error.constraints)).flat()
+        })
+    })
   );
   await app.listen(port);
   console.info(`🚀 Server running on: http://localhost:${port}/api-docs`);
