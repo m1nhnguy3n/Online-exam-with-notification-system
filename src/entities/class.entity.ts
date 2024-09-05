@@ -7,7 +7,8 @@ import { ExamToClass } from './exam-to-class.entity';
 export class Class extends BaseEntity {
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: false,
+    unique: true
   })
   public name: string;
 

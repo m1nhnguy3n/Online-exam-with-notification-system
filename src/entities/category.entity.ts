@@ -7,7 +7,8 @@ import { Exam } from './exam.entity';
 export class Category extends BaseEntity {
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: false,
+    unique: true
   })
   public name: string;
 
