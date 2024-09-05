@@ -9,6 +9,7 @@ import { UserModule } from './modules/user/user.module';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalException } from './exceptions/global.exception';
+import { AuthModule } from './auth/auth.module';
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -24,6 +25,7 @@ import { GlobalException } from './exceptions/global.exception';
 			inject: [ApiConfigService],
 		}),
 		UserModule,
+		AuthModule,
 	],
 	controllers: [AppController],
 	providers: [

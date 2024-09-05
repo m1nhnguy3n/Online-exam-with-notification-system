@@ -83,3 +83,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+nest g res login
+
+## use Authorize cho các chức năng
+- Ae dùng annotation @UseGuards(JwtAuthGuard, RolesGuard) này ở trên class ...Controller
+- và dùng annotation @Roles('admin') vào chỗ function, route ( ví dụ muốn cho ai cũng dùng được thì đừng thêm @Roles ở trên là được)

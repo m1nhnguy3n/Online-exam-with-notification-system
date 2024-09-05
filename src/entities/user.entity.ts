@@ -1,5 +1,6 @@
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsEmail, isNotEmpty, IsNotEmpty, Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { UserRole } from './role.enum';
 
 @Entity()
 export class UserEntity {
@@ -15,4 +16,17 @@ export class UserEntity {
 	@IsEmail({}, { message: 'Email must be a valid email address' })
 	@IsNotEmpty({ message: 'Email is required' })
 	email: string;
+
+	@Column()
+	@IsNotEmpty({ message: 'Full name is required' })
+	password: string;
+
+	@Column({
+		type: 'enum',
+		enum: UserRole,
+		default: UserRole.Student,
+	  })
+	  role: UserRole;
+
+
 }
