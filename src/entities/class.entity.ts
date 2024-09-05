@@ -26,7 +26,6 @@ export class Class extends BaseEntity {
   @OneToMany(() => StudentToClass, (studentToClass) => studentToClass.class)
   public studentToClass: StudentToClass[];
 
-
   @OneToMany(() => ExamToClass, (examToClass) => examToClass.class)
   public examToClass: ExamToClass[];
 }
