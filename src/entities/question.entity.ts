@@ -21,12 +21,6 @@ export class Question extends BaseEntity {
   })
   public content: string;
 
-  @Column({
-    type: 'integer',
-    nullable: false
-  })
-  public order: number;
-
   @ManyToOne(() => Teacher, (teacher) => teacher.questions)
   @JoinColumn({ name: 'teacherId' })
   public teacher: Teacher;
