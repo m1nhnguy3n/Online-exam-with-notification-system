@@ -6,8 +6,6 @@ import { Category } from './category.entity';
 import { ExamToQuestion } from './exam-to-question.entity';
 import { QuestionType } from './enums/question-type.enum';
 
-
-
 @Entity('questions')
 export class Question extends BaseEntity {
   @Column({
