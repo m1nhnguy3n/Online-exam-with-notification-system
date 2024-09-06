@@ -9,12 +9,12 @@ export class ExamToClass extends BaseEntity {
   @Column({
     type: 'uuid'
   })
-  public examId: UUID;
+  public examId: string;
 
   @Column({
     type: 'uuid'
   })
-  public classId: UUID;
+  public classId: string;
 
   @ManyToOne(() => Exam, (exam) => exam.examToClass)
   public exam: Exam;

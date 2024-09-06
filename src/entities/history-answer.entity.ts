@@ -9,12 +9,12 @@ export class HistoryAnswer extends BaseEntity {
   @Column({
     type: 'uuid'
   })
-  public resultId: UUID;
+  public resultId: string;
 
   @Column({
     type: 'uuid'
   })
-  public optionId: UUID;
+  public optionId: string;
 
   @ManyToOne(() => Result, (result) => result.historyAnswers)
   public result: Result;

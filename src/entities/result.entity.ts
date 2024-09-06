@@ -23,7 +23,7 @@ export class Result extends BaseEntity {
     type: 'interval',
     nullable: false
   })
-  public timeTaken: number;
+  public timeTaken: string;
 
   @OneToMany(() => HistoryAnswer, (historyAnswer) => historyAnswer.result)
   public historyAnswers: HistoryAnswer[];

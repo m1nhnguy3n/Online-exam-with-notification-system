@@ -1,17 +1,26 @@
-import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BeforeInsert, CreateDateColumn, DeleteDateColumn, Column, UpdateDateColumn } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn('uuid', {
+  @Column('uuid', {
+    primary: true,
     name: 'ID'
   })
   id: string;
 
-  @UpdateDateColumn({})
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @CreateDateColumn({})
+  @CreateDateColumn()
   createdAt: Date;
 
-  @DeleteDateColumn({})
+  @DeleteDateColumn()
   deletedAt: Date;
+
+  @BeforeInsert()
+  generateId() {
+    if (!this.id) {
+      this.id = uuidv4();
+    }
+  }
 }
