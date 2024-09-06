@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
 import { Teacher } from './teacher.entity';
-import { ExamToClass } from './exam-to-class.entity';
+import { ExamClass } from './exam-class.entity';
 import { Result } from './result.entity';
-import { ExamToQuestion } from './exam-to-question.entity';
+import { ExamQuestion } from './exam-question.entity';
 import { Category } from './category.entity';
 
 @Entity('exams')
@@ -34,20 +34,18 @@ export class Exam extends BaseEntity {
   })
   public isPublic: boolean;
 
-  @OneToMany(() => ExamToClass, (examToClass) => examToClass.exam)
-  public examToClass: ExamToClass[];
+  @OneToMany(() => ExamClass, (examClass) => examClass.exam)
+  public examClass: ExamClass[];
 
   @ManyToOne(() => Teacher, (teacher) => teacher.exams)
-  @JoinColumn({ name: 'teacherId' })
   public teacher: Teacher;
 
   @OneToMany(() => Result, (result) => result.exam)
   public results: Result[];
 
-  @OneToMany(() => ExamToQuestion, (examToQuestion) => examToQuestion.exam)
-  public examToQuestion: ExamToQuestion[];
+  @OneToMany(() => ExamQuestion, (examQuestion) => examQuestion.exam)
+  public examQuestion: ExamQuestion[];
 
   @ManyToOne(() => Category, (category) => category.exams)
-  @JoinColumn({ name: 'categoryId' })
   public category: Category;
 }

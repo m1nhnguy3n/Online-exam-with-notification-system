@@ -20,7 +20,6 @@ export class Option extends BaseEntity {
   public isCorrect: boolean;
 
   @ManyToOne(() => Question, (question) => question.options)
-  @JoinColumn({ name: 'questionId' })
   public question: Question;
 
   @OneToMany(() => HistoryAnswer, (historyAnswer) => historyAnswer.option)

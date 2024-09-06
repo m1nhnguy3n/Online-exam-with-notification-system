@@ -1,13 +1,20 @@
 import { UUID } from 'crypto';
-import { BeforeInsert, CreateDateColumn, DeleteDateColumn, Column, UpdateDateColumn, Index } from 'typeorm';
+import {
+  BeforeInsert,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Column,
+  UpdateDateColumn,
+  Index,
+  PrimaryColumn
+} from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 
 export abstract class BaseEntity {
-  @Index({ unique: true })
-  @Column('uuid', {
-    primary: true,
-    name: 'ID'
+  @PrimaryColumn('uuid', {
+    name: 'id'
   })
+  @Index()
   public id: UUID;
 
   @UpdateDateColumn()

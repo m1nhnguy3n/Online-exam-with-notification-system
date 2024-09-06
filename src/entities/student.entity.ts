@@ -3,7 +3,7 @@ import { User } from './user.entity';
 import { BaseEntity } from './base/base.entity';
 import { Class } from './class.entity';
 import { Result } from './result.entity';
-import { StudentToClass } from './student-to-class.entity';
+import { StudentClass } from './student-class.entity';
 
 @Entity('students')
 export class Student extends BaseEntity {
@@ -23,6 +23,6 @@ export class Student extends BaseEntity {
   @OneToMany(() => Result, (result) => result.student)
   public results: Result[];
 
-  @OneToMany(() => StudentToClass, (studentToClass) => studentToClass.class)
-  public studentToClass: StudentToClass[];
+  @OneToMany(() => StudentClass, (studentClass) => studentClass.class)
+  public studentClass: StudentClass[];
 }

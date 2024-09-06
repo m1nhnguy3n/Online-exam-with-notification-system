@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NextFunction, Request, Response } from 'express';
-
-const api_documentation_credentials = {
-  name: 'admin',
-  pass: 'admin'
-};
+import { ApiConfigService } from 'src/shared/services/api-config.service';
+import { SharedModule } from 'src/shared/shared.module';
 
 export function configSwagger(app: INestApplication) {
+  const configService = app.select(SharedModule).get(ApiConfigService);
+  let api_documentation_credentials = configService.apiDocumentationCredentials; // Get credentials from app
+
   const config = new DocumentBuilder()
     .setTitle('Exam Online project')
     .setDescription('## The Online Exam API description')

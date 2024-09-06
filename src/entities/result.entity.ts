@@ -29,10 +29,8 @@ export class Result extends BaseEntity {
   public historyAnswers: HistoryAnswer[];
 
   @ManyToOne(() => Student, (student) => student.results)
-  @JoinColumn({ name: 'studentId' })
   public student: Student;
 
   @ManyToOne(() => Exam, (exam) => exam.results)
-  @JoinColumn({ name: 'examId' })
   public exam: Exam;
 }

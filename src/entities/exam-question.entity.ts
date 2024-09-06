@@ -5,7 +5,7 @@ import { Exam } from './exam.entity';
 import { Question } from './question.entity';
 
 @Entity('exams_questions')
-export class ExamToQuestion extends BaseEntity {
+export class ExamQuestion extends BaseEntity {
   @Column({
     type: 'uuid'
   })
@@ -22,9 +22,9 @@ export class ExamToQuestion extends BaseEntity {
   })
   public order: number;
 
-  @ManyToOne(() => Exam, (exam) => exam.examToQuestion)
+  @ManyToOne(() => Exam, (exam) => exam.examQuestion)
   public exam: Exam;
 
-  @ManyToOne(() => Question, (question) => question.examToQuestion)
+  @ManyToOne(() => Question, (question) => question.examQuestion)
   public question: Question;
 }

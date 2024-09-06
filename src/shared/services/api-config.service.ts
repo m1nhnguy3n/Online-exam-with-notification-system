@@ -95,7 +95,7 @@ export class ApiConfigService {
 
   get apiDocumentationCredentials() {
     return {
-      name: this.getString('API_DOCUMENTATION_CREDENTIALS_NAME'),
+      name: this.getString('API_DOCUMENTATION_CREDENTIALS_USERNAME'),
       pass: this.getString('API_DOCUMENTATION_CREDENTIALS_PASSWORD')
     };
   }

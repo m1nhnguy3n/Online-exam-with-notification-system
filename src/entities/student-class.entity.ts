@@ -5,7 +5,7 @@ import { Class } from './class.entity';
 import { BaseEntity } from './base/base.entity';
 
 @Entity('students_classes')
-export class StudentToClass extends BaseEntity {
+export class StudentClass extends BaseEntity {
   @Column({
     type: 'uuid'
   })
@@ -16,9 +16,9 @@ export class StudentToClass extends BaseEntity {
   })
   public classId: UUID;
 
-  @ManyToOne(() => Student, (student) => student.studentToClass)
+  @ManyToOne(() => Student, (student) => student.studentClass)
   public student: Student;
 
-  @ManyToOne(() => Class, (studentClass) => studentClass.studentToClass)
+  @ManyToOne(() => Class, (studentClass) => studentClass.examClass)
   public class: Class;
 }
