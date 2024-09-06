@@ -19,7 +19,6 @@ export class UserService {
   async createStudent(createUserDto: CreateUserDto, parentNumber: string): Promise<User> {
     try {
       const existingUser = await this.userRepository.findUserByEmail(createUserDto.email);
-
       if (existingUser) {
         throw new BadRequestException({
           message: ERRORS_DICTIONARY.EMAIL_EXISTED
@@ -74,7 +73,6 @@ export class UserService {
 
   async findOne(id: UUID): Promise<User> {
     const userData = await this.userRepository.findUserById(id);
-
     if (!userData) {
       throw new BadRequestException({
         message: ERRORS_DICTIONARY.EMAIL_EXISTED

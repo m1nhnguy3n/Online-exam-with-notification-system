@@ -79,7 +79,7 @@ export class ApiConfigService {
       synchronize: this.isDevelopment,
       migrationsRun: true,
       // logging: this.getBoolean('ENABLE_ORM_LOGS'),
-      ssl: this.getBoolean('DB_SSL')
+      // ssl: this.getBoolean('DB_SSL')
     };
   }
 
