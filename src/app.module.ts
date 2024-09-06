@@ -7,6 +7,7 @@ import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { QuestionsModule } from './modules/questions/questions.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,7 +21,8 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (configService: ApiConfigService) => configService.postgresConfig,
       inject: [ApiConfigService]
     }),
-    UserModule
+    UserModule,
+    QuestionsModule
   ],
   providers: [
     {
