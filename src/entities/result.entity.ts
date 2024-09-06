@@ -8,7 +8,8 @@ import { HistoryAnswer } from './history-answer.entity';
 export class Result extends BaseEntity {
   @Column({
     type: 'decimal',
-    nullable: false
+    nullable: false,
+    default: 0
   })
   public score: number;
 

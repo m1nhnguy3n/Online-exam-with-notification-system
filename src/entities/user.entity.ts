@@ -1,7 +1,5 @@
 import { Column, Entity, OneToOne } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
-import { Student } from './student.entity';
-import { Teacher } from './teacher.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -9,14 +7,11 @@ export enum UserRole {
   STUDENT = 'student'
 }
 
-export enum Gender {
+export enum UserGender {
   MALE = 'M',
   FEMALE = 'F'
 }
 
-export enum ActiveStatus {
-  ACTIVE = 'active'
-}
 @Entity('users')
 export class User extends BaseEntity {
   @Column({
@@ -49,8 +44,8 @@ export class User extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: Gender,
-    default: Gender.MALE
+    enum: UserGender,
+    default: UserGender.MALE
   })
   gender: string;
 
@@ -63,7 +58,7 @@ export class User extends BaseEntity {
 
   @Column({
     type: 'boolean',
-    default: true
+    default: false
   })
   isActive: boolean;
 
