@@ -8,8 +8,8 @@ export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.create(createQuestionDto);
+  async create(teacherId:string,@Body() createQuestionDto: CreateQuestionDto) {
+    return await this.questionsService.create(teacherId, createQuestionDto);
   }
 
   @Get()
