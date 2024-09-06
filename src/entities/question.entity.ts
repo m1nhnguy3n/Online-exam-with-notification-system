@@ -18,9 +18,14 @@ export class Question extends BaseEntity {
   @Column({
     type: 'varchar',
     nullable: false,
-    length: 255
   })
   public content: string;
+
+  @Column({
+    type: 'integer',
+    nullable: false
+  })
+  public order: number;
 
   @ManyToOne(() => Teacher, (teacher) => teacher.questions)
   @JoinColumn({ name: 'teacherId' })

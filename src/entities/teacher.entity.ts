@@ -14,7 +14,7 @@ export class Teacher extends BaseEntity {
 
   @OneToOne(() => User)
   @JoinColumn({
-    name: 'userID'
+    name: 'userId'
   })
   user: User;
 

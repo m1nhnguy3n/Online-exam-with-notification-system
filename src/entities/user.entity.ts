@@ -1,9 +1,10 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, Index, OneToOne } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
 import { Role } from './enums/role.enum';
 import { Gender } from './enums/gender.enum';
 
 @Entity('users')
+@Index(['firstName', 'lastName'])
 export class User extends BaseEntity {
   @Column({
     type: 'enum',
@@ -23,7 +24,6 @@ export class User extends BaseEntity {
   @Column({
     type: 'varchar',
     nullable: false,
-    length: 255
   })
   password: string;
 

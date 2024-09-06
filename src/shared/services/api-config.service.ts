@@ -92,4 +92,11 @@ export class ApiConfigService {
   get documentationEnabled(): boolean {
     return this.getBoolean('ENABLE_DOCUMENTATION');
   }
+
+  get apiDocumentationCredentials() {
+    return {
+      name: this.getString('API_DOCUMENTATION_CREDENTIALS_NAME'),
+      pass: this.getString('API_DOCUMENTATION_CREDENTIALS_PASSWORD')
+    };
+  }
 }

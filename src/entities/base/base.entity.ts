@@ -1,26 +1,28 @@
-import { BeforeInsert, CreateDateColumn, DeleteDateColumn, Column, UpdateDateColumn } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { UUID } from 'crypto';
+import { BeforeInsert, CreateDateColumn, DeleteDateColumn, Column, UpdateDateColumn, Index } from 'typeorm';
+import { v4 as uuidV4 } from 'uuid';
 
 export abstract class BaseEntity {
+  @Index({ unique: true })
   @Column('uuid', {
     primary: true,
     name: 'ID'
   })
-  id: string;
+  public id: UUID;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  public updatedAt: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  public createdAt: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  public deletedAt: Date;
 
   @BeforeInsert()
   generateId() {
     if (!this.id) {
-      this.id = uuidv4();
+      this.id = uuidV4();
     }
   }
 }

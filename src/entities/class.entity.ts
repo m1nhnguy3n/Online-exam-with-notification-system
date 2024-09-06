@@ -1,4 +1,4 @@
-import { Column, ManyToMany, Entity, OneToMany } from 'typeorm';
+import { Column, ManyToMany, Entity, OneToMany, Index } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
 import { StudentToClass } from './student-to-class.entity';
 import { ExamToClass } from './exam-to-class.entity';

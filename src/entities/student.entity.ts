@@ -16,7 +16,7 @@ export class Student extends BaseEntity {
 
   @OneToOne(() => User)
   @JoinColumn({
-    name: 'userID'
+    name: 'userId'
   })
   public user: User;
 
