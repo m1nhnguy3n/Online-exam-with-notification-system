@@ -16,13 +16,13 @@ export class Class extends BaseEntity {
     type: 'date',
     nullable: false
   })
-  public classStart: Date;
+  public timeStart: Date;
 
   @Column({
     type: 'date',
     nullable: false
   })
-  public classEnd: Date;
+  public timeEnd: Date;
 
   @OneToMany(() => StudentToClass, (studentToClass) => studentToClass.class)
   public studentToClass: StudentToClass[];

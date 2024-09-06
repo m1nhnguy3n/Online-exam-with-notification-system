@@ -1,28 +1,14 @@
 import { Column, Entity, OneToOne } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
-import { Student } from './student.entity';
-import { Teacher } from './teacher.entity';
+import { Role } from './enums/role.enum';
+import { Gender } from './enums/gender.enum';
 
-export enum UserRole {
-  ADMIN = 'admin',
-  TEACHER = 'teacher',
-  STUDENT = 'student'
-}
-
-export enum Gender {
-  MALE = 'M',
-  FEMALE = 'F'
-}
-
-export enum ActiveStatus {
-  ACTIVE = 'active'
-}
 @Entity('users')
 export class User extends BaseEntity {
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.TEACHER
+    enum: Role,
+    default: Role.TEACHER
   })
   role: string;
 
@@ -63,7 +49,7 @@ export class User extends BaseEntity {
 
   @Column({
     type: 'boolean',
-    default: true
+    default: false
   })
   isActive: boolean;
 

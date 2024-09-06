@@ -21,4 +21,16 @@ export class ExamToClass extends BaseEntity {
 
   @ManyToOne(() => Class, (studentClass) => studentClass.examToClass)
   public class: Class;
+
+  @Column({
+    type: 'date',
+    nullable: false
+  })
+  public timeStart: Date;
+
+  @Column({
+    type: 'date',
+    nullable: false
+  })
+  public timeEnd: Date;
 }

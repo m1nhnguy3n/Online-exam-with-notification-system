@@ -4,11 +4,9 @@ import { Teacher } from './teacher.entity';
 import { Option } from './option.entity';
 import { Category } from './category.entity';
 import { ExamToQuestion } from './exam-to-question.entity';
+import { QuestionType } from './enums/question-type.enum';
 
-export enum QuestionType {
-  MULTIPLE_CHOICES = 'M',
-  SINGLE_CHOICE = 'S'
-}
+
 
 @Entity('questions')
 export class Question extends BaseEntity {
