@@ -10,6 +10,7 @@ import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { QuestionsModule } from './modules/questions/questions.module';
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -25,6 +26,7 @@ import { AppService } from './app.service';
 			inject: [ApiConfigService],
 		}),
 		UserModule,
+		QuestionsModule,
 		AuthModule,
 	],
 	controllers: [AppController],
