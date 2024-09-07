@@ -1,15 +1,15 @@
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config'; // Import the ConfigModule from the correct module
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';// Import the ConfigModule from the correct module
+import { APP_FILTER } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { GlobalException } from './exceptions/global.exception';
+import { LoggingMiddleware } from './middlewares/logging.middleware';
+import { UserModule } from './modules/user/user.module';
+import { ApiConfigService } from './shared/services/api-config.service';
+import { SharedModule } from './shared/shared.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { SharedModule } from './shared/shared.module';
-import { ApiConfigService } from './shared/services/api-config.service';
-import { UserModule } from './modules/user/user.module';
-import { LoggingMiddleware } from './middlewares/logging.middleware';
-import { APP_FILTER } from '@nestjs/core';
-import { GlobalException } from './exceptions/global.exception';
 @Module({
 	imports: [
 		ConfigModule.forRoot({
