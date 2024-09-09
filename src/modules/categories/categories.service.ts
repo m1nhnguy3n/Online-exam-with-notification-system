@@ -58,7 +58,15 @@ export class CategoriesService {
   }
 
   async update(id: UUID, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoriesRepository.update(id, updateCategoryDto);
+    return await this.findOne(id)
+      .then(async () => {
+        const updateResult = await this.categoriesRepository.update(id, updateCategoryDto);
+
+        return updateResult.affected;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   remove(id: UUID) {

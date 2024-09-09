@@ -75,8 +75,8 @@ export class CategoriesController {
     description: 'Found resource'
   })
   @ApiResponse({
-    status: HttpStatus.NOT_ACCEPTABLE,
-    description: 'Unique fields'
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Validation Failed'
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -97,11 +97,31 @@ export class CategoriesController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Updated'
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Validation Failed'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Not found any resource'
+  })
   @Patch(':id')
   async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateCategoryDto: UpdateCategoryDto) {
     try {
-      const data = this.categoriesService.update(id, updateCategoryDto);
-    } catch (error) {}
+      const numResourcesEffected = await this.categoriesService.update(id, updateCategoryDto);
+
+      return {
+        success: true,
+        numResourcesEffected,
+        message: 'Successfully'
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Delete(':id')
