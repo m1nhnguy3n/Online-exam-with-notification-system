@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotAcceptableException } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { Category } from 'src/entities/category.entity';
 import { UserService } from '../user/user.service';
 import { UUID } from 'crypto';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
+import { Paginate } from './dto/paginate.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -36,8 +37,33 @@ export class QuestionsService {
     return newQuestion;
   }
 
+  
   findAll() {
     return `This action returns all questions`;
+  }
+
+  async getAllQuestions(user:any, dto: Paginate){
+    const limit=dto.limit
+    const offset=(dto.page-1)*limit
+    const query = this.questionRepository
+      .createQueryBuilder('question')
+      .limit(limit)
+      .offset(offset);
+      
+    
+    if (!user) {
+      throw new ForbiddenException({})
+    }
+    if (user.role === "teacher") {
+      const { id } = await this.userService.findOneTeacherByUserId(user.id)
+      return query
+        .innerJoinAndSelect('question.teacher', 'teacher')
+        .select(['question.type', 'question.content'])
+        .where('teacher.id = :teacherId', { teacherId: id })
+        .getMany(); 
+    }
+    const questions = await query.getMany();
+    return questions;
   }
 
   findOne(id: number) {
