@@ -1,8 +1,7 @@
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class UserEntity {
+export class TokenEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

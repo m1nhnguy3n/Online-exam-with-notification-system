@@ -8,25 +8,23 @@ import { ERRORS_DICTIONARY } from './constraints/error-dictionary.constraint';
 import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const configService = app.select(SharedModule).get(ApiConfigService);
-  const port = configService.serverConfig.port;
-  if (configService.documentationEnabled) {
-    configSwagger(app);
-  }
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      exceptionFactory: (errors: ValidationError[]) =>
-        new BadRequestException({
-          message: ERRORS_DICTIONARY.VALIDATION_ERROR,
-          details: errors
-            .map((error) => Object.values(error.constraints))
-            .flat(),
-        }),
-    }),
-  );
-  await app.listen(port);
-  console.info(`🚀 Server running on: http://localhost:${port}/api-docs`);
+    const app = await NestFactory.create(AppModule);
+    const configService = app.select(SharedModule).get(ApiConfigService);
+    const port = configService.serverConfig.port;
+    if (configService.documentationEnabled) {
+        configSwagger(app);
+    }
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            exceptionFactory: (errors: ValidationError[]) =>
+                new BadRequestException({
+                    message: ERRORS_DICTIONARY.VALIDATION_ERROR,
+                    details: errors.map((error) => Object.values(error.constraints)).flat()
+                })
+        })
+    );
+    await app.listen(port);
+    console.info(`🚀 Server running on: http://localhost:${port}/api-docs`);
 }
 bootstrap();
