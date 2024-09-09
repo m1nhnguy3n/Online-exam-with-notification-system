@@ -16,5 +16,9 @@ export enum ERRORS_DICTIONARY {
   //author
   NOT_RIGHTS ='Not rights',
 
-  CREATE_QUESTION_FAIL='Create question fail'
+  //QUESTION
+  CREATE_QUESTION_FAIL = 'Create question fail'
+  
+
+  
 }
