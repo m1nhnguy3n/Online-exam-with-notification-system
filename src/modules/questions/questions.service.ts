@@ -16,6 +16,7 @@ export class QuestionsService {
   constructor(@InjectRepository(Question) private questionRepository: Repository<Question>, private userService: UserService) { }
   
   async create(teacherId: UUID, createQuestionDto: CreateQuestionDto): Promise<Question> {
+    
     const { categoryId, content, type } = createQuestionDto;
     const question = this.questionRepository.create({
       content: content,
@@ -66,15 +67,26 @@ export class QuestionsService {
     return questions;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  async findOne(questionId: UUID) {
+    return await this.questionRepository.findOne({
+      where: {
+        id:questionId
+      }
+    })
   }
 
   update(id: number, updateQuestionDto: UpdateQuestionDto) {
     return `This action updates a #${id} question`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} question`;
+  async remove(questionId: UUID) {
+    const foundQuestion = await this.findOne(questionId);
+    if (!foundQuestion) {
+      throw new BadRequestException({
+        message:ERRORS_DICTIONARY.QUESTION_NOT_FOUND
+      })
+    }
+    const obj =await this.questionRepository.softDelete(questionId)
+    return obj;
   }
 }
