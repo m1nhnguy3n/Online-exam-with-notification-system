@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from 'src/entities/category.entity';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
+import { ResponseException } from 'src/shared/exceptions/response.exception';
 
 @Injectable()
 export class CategoriesService {
@@ -22,9 +23,12 @@ export class CategoriesService {
     });
 
     if (existingCategory) {
-      throw new BadRequestException({
-        message: ERRORS_DICTIONARY.EXISTING_A_RECORD
-      });
+      throw new HttpException(
+        new ResponseException(ERRORS_DICTIONARY.EXISTING_A_RECORD, [
+          `Existing a record with name=${createCategoryDto.name} in DB`
+        ]),
+        HttpStatus.NOT_ACCEPTABLE
+      );
     }
 
     const newCategory = await this.categoriesRepository.create(createCategoryDto);
@@ -40,11 +44,16 @@ export class CategoriesService {
 
   async findOne(id: UUID) {
     const categoryData = await this.categoriesRepository.findOne({ where: { id }, withDeleted: false });
+
     if (!categoryData) {
-      throw new BadRequestException({
-        message: ERRORS_DICTIONARY.NOT_FOUND_ANY_CATEGORY
-      });
+      throw new HttpException(
+        new ResponseException(ERRORS_DICTIONARY.NOT_FOUND_ANY_CATEGORY, [
+          `Not found any category has id=${id} in DB`
+        ]),
+        HttpStatus.NOT_FOUND
+      );
     }
+
     return categoryData;
   }
 

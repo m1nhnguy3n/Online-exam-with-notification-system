@@ -16,7 +16,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { HttpExceptionFilter } from 'src/shared/filters/http-exception.filter';
+import { HttpExceptionFilter } from 'src/shared/exceptions/http-exception.filter';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -33,6 +33,10 @@ export class CategoriesController {
     status: HttpStatus.NOT_ACCEPTABLE,
     description: 'Unique fields'
   })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Validation failed'
+  })
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     try {
       const data = await this.categoriesService.create(createCategoryDto);
@@ -47,6 +51,10 @@ export class CategoriesController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found resources'
+  })
   @Get()
   async findAll() {
     try {
@@ -58,22 +66,26 @@ export class CategoriesController {
         message: 'User Fetched Successfully'
       };
     } catch (error) {
-      return new HttpException(
-        {
-          response: {
-            success: false,
-            message: error.message
-          }
-        },
-        HttpStatus.NOT_ACCEPTABLE
-      );
+      throw error;
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found resource'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_ACCEPTABLE,
+    description: 'Unique fields'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Not found any resource'
+  })
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
     try {
-      const data = this.categoriesService.findOne(id);
+      const data = await this.categoriesService.findOne(id);
 
       return {
         success: true,
@@ -81,10 +93,7 @@ export class CategoriesController {
         message: 'User Fetched Successfully'
       };
     } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
+      throw error;
     }
   }
 
