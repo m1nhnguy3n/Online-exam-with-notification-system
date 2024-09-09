@@ -17,12 +17,10 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { HttpExceptionFilter } from 'src/shared/exceptions/http-exception.filter';
 import { query, Request } from 'express';
 import { QueryCategoryDto } from './dto/query-category.dto';
 @ApiTags('categories')
 @Controller('categories')
-@UseFilters(HttpExceptionFilter)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
@@ -107,7 +105,7 @@ export class CategoriesController {
 
     return {
       success: true,
-      data: { numResourcesAffected },
+      numResourcesAffected,
       message: 'Success'
     };
   }

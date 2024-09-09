@@ -7,6 +7,7 @@ export class GlobalException implements ExceptionFilter {
   constructor(private readonly config_service: ConfigService) {}
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+
     const response = ctx.getResponse<Response>();
 
     const status = exception instanceof HttpException ? exception.getStatus() : 500;
