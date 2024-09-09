@@ -10,5 +10,9 @@ export enum ERRORS_DICTIONARY {
   TOKEN_ERROR = "Token invalid",
 
 
-  CREATE_QUESTION_FAIL='Create question fail'
+  //QUESTION
+  CREATE_QUESTION_FAIL = 'Create question fail'
+  
+
+  
 }
