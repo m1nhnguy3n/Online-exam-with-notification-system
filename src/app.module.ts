@@ -10,32 +10,31 @@ import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalException } from './exceptions/global.exception';
 @Module({
-	imports: [
-		ConfigModule.forRoot({
-			isGlobal: true,
-			envFilePath: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
-			cache: true,
-			expandVariables: true,
-		}),
-		TypeOrmModule.forRootAsync({
-			imports: [SharedModule],
-			useFactory: (configService: ApiConfigService) =>
-				configService.postgresConfig,
-			inject: [ApiConfigService],
-		}),
-		UserModule,
-	],
-	controllers: [AppController],
-	providers: [
-		AppService,
-		{
-			provide: APP_FILTER,
-			useClass: GlobalException,
-		},
-	],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
+      cache: true,
+      expandVariables: true
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [SharedModule],
+      useFactory: (configService: ApiConfigService) => configService.postgresConfig,
+      inject: [ApiConfigService]
+    }),
+    UserModule
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: GlobalException
+    }
+  ]
 })
 export class AppModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggingMiddleware).forRoutes('*');
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
 }

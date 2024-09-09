@@ -79,16 +79,24 @@ export class ApiConfigService {
       synchronize: this.isDevelopment,
       migrationsRun: true,
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
+      ssl: this.getBoolean('DB_SSL')
     };
   }
 
   get serverConfig() {
     return {
-      port: this.configService.get<number>('PORT') || 4000,
+      port: this.configService.get<number>('PORT') || 4000
     };
   }
 
   get documentationEnabled(): boolean {
     return this.getBoolean('ENABLE_DOCUMENTATION');
+  }
+
+  get apiDocumentationCredentials() {
+    return {
+      name: this.getString('API_DOCUMENTATION_CREDENTIALS_USERNAME'),
+      pass: this.getString('API_DOCUMENTATION_CREDENTIALS_PASSWORD')
+    };
   }
 }
