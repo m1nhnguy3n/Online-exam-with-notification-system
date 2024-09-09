@@ -69,7 +69,15 @@ export class CategoriesService {
       });
   }
 
-  remove(id: UUID) {
-    return `This action removes a #${id} category`;
+  async remove(id: UUID) {
+    return await this.findOne(id)
+      .then(async () => {
+        const updateResult = await this.categoriesRepository.softDelete(id);
+
+        return updateResult.affected;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 }

@@ -9,7 +9,8 @@ import {
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
-  UseFilters
+  UseFilters,
+  HttpCode
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -44,7 +45,7 @@ export class CategoriesController {
       return {
         success: true,
         data,
-        message: 'Category created'
+        message: 'Created'
       };
     } catch (error) {
       throw error;
@@ -63,7 +64,7 @@ export class CategoriesController {
       return {
         success: true,
         data,
-        message: 'User Fetched Successfully'
+        message: 'Successfully'
       };
     } catch (error) {
       throw error;
@@ -90,7 +91,7 @@ export class CategoriesController {
       return {
         success: true,
         data,
-        message: 'User Fetched Successfully'
+        message: 'Successfully'
       };
     } catch (error) {
       throw error;
@@ -125,7 +126,29 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: UUID) {
-    return this.categoriesService.remove(id);
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Deleted'
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Validation Failed'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Not found any resource'
+  })
+  async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
+    try {
+      const numResourcesEffected = await this.categoriesService.remove(id);
+
+      return {
+        success: true,
+        numResourcesEffected,
+        message: 'Successfully'
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }
