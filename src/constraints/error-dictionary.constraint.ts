@@ -6,5 +6,9 @@ export enum ERRORS_DICTIONARY {
   // CLASS VALIDATOR
   VALIDATION_ERROR = 'ValidationError',
 
-  CREATE_QUESTION_FAIL='Create question fail'
+  //QUESTION
+  CREATE_QUESTION_FAIL = 'Create question fail'
+  
+
+  
 }
