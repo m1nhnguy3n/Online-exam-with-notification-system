@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  HttpException,
   HttpStatus,
   UseFilters,
-  HttpCode
+  Req,
+  Query
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -18,14 +18,14 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'src/shared/exceptions/http-exception.filter';
-
+import { query, Request } from 'express';
+import { QueryCategoryDto } from './dto/query-category.dto';
 @ApiTags('categories')
 @Controller('categories')
 @UseFilters(HttpExceptionFilter)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Post()
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Created'
@@ -38,18 +38,15 @@ export class CategoriesController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Validation failed'
   })
+  @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
-    try {
-      const data = await this.categoriesService.create(createCategoryDto);
+    const data = await this.categoriesService.create(createCategoryDto);
 
-      return {
-        success: true,
-        data,
-        message: 'Created'
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      success: true,
+      data,
+      message: 'Created'
+    };
   }
 
   @ApiResponse({
@@ -57,18 +54,16 @@ export class CategoriesController {
     description: 'Found resources'
   })
   @Get()
-  async findAll() {
-    try {
-      const data = await this.categoriesService.findAll();
+  async findAll(@Query() queryCategoryDto: QueryCategoryDto) {
+    const { page, limit, ...searchQueries } = queryCategoryDto;
+    console.log({ page, limit, ...searchQueries });
+    const data = await this.categoriesService.findAll(page, limit, searchQueries);
 
-      return {
-        success: true,
-        data,
-        message: 'Successfully'
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      success: true,
+      data,
+      message: 'Success'
+    };
   }
 
   @ApiResponse({
@@ -85,17 +80,13 @@ export class CategoriesController {
   })
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
-    try {
-      const data = await this.categoriesService.findOne(id);
+    const data = await this.categoriesService.findOne(id);
 
-      return {
-        success: true,
-        data,
-        message: 'Successfully'
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      success: true,
+      data,
+      message: 'Success'
+    };
   }
 
   @ApiResponse({
@@ -112,20 +103,15 @@ export class CategoriesController {
   })
   @Patch(':id')
   async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateCategoryDto: UpdateCategoryDto) {
-    try {
-      const numResourcesEffected = await this.categoriesService.update(id, updateCategoryDto);
+    const numResourcesAffected = await this.categoriesService.update(id, updateCategoryDto);
 
-      return {
-        success: true,
-        numResourcesEffected,
-        message: 'Successfully'
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      success: true,
+      data: { numResourcesAffected },
+      message: 'Success'
+    };
   }
 
-  @Delete(':id')
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Deleted'
@@ -138,17 +124,14 @@ export class CategoriesController {
     status: HttpStatus.NOT_FOUND,
     description: 'Not found any resource'
   })
+  @Delete(':id')
   async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
-    try {
-      const numResourcesEffected = await this.categoriesService.remove(id);
+    const numResourcesAffected = await this.categoriesService.remove(id);
 
-      return {
-        success: true,
-        numResourcesEffected,
-        message: 'Successfully'
-      };
-    } catch (error) {
-      throw error;
-    }
+    return {
+      success: true,
+      data: { numResourcesAffected },
+      message: 'Success'
+    };
   }
 }

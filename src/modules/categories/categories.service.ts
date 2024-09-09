@@ -1,9 +1,10 @@
+import { PaginationResult } from './../../shared/interfaces/pagination-result.interface';
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Category } from 'src/entities/category.entity';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { ResponseException } from 'src/shared/exceptions/response.exception';
@@ -27,19 +28,45 @@ export class CategoriesService {
         new ResponseException(ERRORS_DICTIONARY.EXISTING_A_RECORD, [
           `Existing a record with name=${createCategoryDto.name} in DB`
         ]),
-        HttpStatus.NOT_ACCEPTABLE
+        HttpStatus.BAD_REQUEST
       );
     }
 
     const newCategory = await this.categoriesRepository.create(createCategoryDto);
 
-    const newRecord = await this.categoriesRepository.save(newCategory);
+    await this.categoriesRepository.save(newCategory);
 
-    return newRecord;
+    return newCategory;
   }
 
-  async findAll(): Promise<Category[]> {
-    return await this.categoriesRepository.find({ withDeleted: false });
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+    searchQueries: Record<string, any> = {}
+  ): Promise<PaginationResult<Category>> {
+    const whereConditions = Object.entries(searchQueries).reduce((acc, [key, value]) => {
+      acc[key] = typeof value === 'string' ? Like(`%${value}%`) : value;
+      return acc;
+    }, {});
+
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.categoriesRepository.findAndCount({
+      where: whereConditions,
+      withDeleted: false,
+      skip: skip,
+      take: limit
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages
+    };
   }
 
   async findOne(id: UUID) {
