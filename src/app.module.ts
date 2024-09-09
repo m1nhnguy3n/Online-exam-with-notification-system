@@ -10,31 +10,32 @@ import { UserModule } from './modules/user/user.module';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalException } from './exceptions/global.exception';
+import { CategoriesModule } from './modules/categories/categories.module';
 @Module({
-	imports: [
-		ConfigModule.forRoot({
-			isGlobal: true,
-			envFilePath: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
-			cache: true,
-			expandVariables: true,
-		}),
-		TypeOrmModule.forRootAsync({
-			imports: [SharedModule],
-			useFactory: (configService: ApiConfigService) =>
-				configService.postgresConfig,
-			inject: [ApiConfigService],
-		}),
-		UserModule,
-		AuthModule,
-	],
-	controllers: [AppController],
-	providers: [
-		AppService,
-		{
-			provide: APP_FILTER,
-			useClass: GlobalException,
-		},
-	],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
+      cache: true,
+      expandVariables: true
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [SharedModule],
+      useFactory: (configService: ApiConfigService) => configService.postgresConfig,
+      inject: [ApiConfigService]
+    }),
+    UserModule,
+    AuthModule,
+    CategoriesModule
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: GlobalException
+    }
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
