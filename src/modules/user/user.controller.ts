@@ -19,6 +19,7 @@ import { UserService } from './user.service';
 
 @Controller('users')
 @ApiTags('User')
+@ApiTags('User')
 @UseInterceptors(LoggingInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -43,6 +44,7 @@ export class UserController {
   @Post('teacher')
   async createTeacher(@Body() createTeacherDto: CreateTeacherDto) {
     try {
+      await this.userService.createTeacher(createTeacherDto, createTeacherDto.subject);
       await this.userService.createTeacher(createTeacherDto, createTeacherDto.subject);
 
       return {

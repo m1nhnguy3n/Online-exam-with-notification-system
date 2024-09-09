@@ -30,7 +30,6 @@ export class UserRepository {
       }
     });
   }
-
   async findUserById(id: UUID) {
     return await this.userRepository.findOne({
       where: {

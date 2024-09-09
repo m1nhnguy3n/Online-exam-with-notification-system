@@ -14,7 +14,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly studentRepository: StudentRepository,
     private readonly teacherRepository: TeacherRepository
-  ) {}
+  ) { }
 
   async createStudent(createUserDto: CreateUserDto, parentNumber: string): Promise<User> {
     try {
@@ -68,7 +68,7 @@ export class UserService {
     return await this.userRepository.findAllUser();
   }
 
-  async findAllTeacher(){
+  async findAllTeacher() {
     return await this.teacherRepository.findAll()
   }
 
@@ -123,6 +123,4 @@ export class UserService {
 
     return userRemoved;
   }
-
-  async;
 }
