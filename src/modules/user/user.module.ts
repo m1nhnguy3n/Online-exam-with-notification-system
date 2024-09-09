@@ -12,6 +12,7 @@ import { StudentRepository } from './repositories/student.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([User, Teacher, Student])],
   controllers: [UserController],
-  providers: [UserService, UserRepository, TeacherRepository, StudentRepository]
+  providers: [UserService,UserRepository,StudentRepository,TeacherRepository],
+  exports: [UserService]
 })
 export class UserModule {}
