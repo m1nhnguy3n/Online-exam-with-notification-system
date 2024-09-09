@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import { IsEmail, isNotEmpty, IsNotEmpty, Length } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { UserRole } from './role.enum';
-=======
 import { Column, Entity, Index, OneToOne } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
 import { Role } from './enums/role.enum';
 import { Gender } from './enums/gender.enum';
->>>>>>> 39bad04c7e3e38fa609938f7ace2c483444eaeba
 
 @Entity('users')
 @Index(['firstName', 'lastName'])
@@ -27,25 +21,6 @@ export class User extends BaseEntity {
   })
   email: string;
 
-<<<<<<< HEAD
-	@Column({ unique: true })
-	@IsEmail({}, { message: 'Email must be a valid email address' })
-	@IsNotEmpty({ message: 'Email is required' })
-	email: string;
-
-	@Column()
-	@IsNotEmpty({ message: 'Full name is required' })
-	password: string;
-
-	@Column({
-		type: 'enum',
-		enum: UserRole,
-		default: UserRole.Student,
-	  })
-	  role: UserRole;
-
-
-=======
   @Column({
     type: 'varchar',
     nullable: false,
@@ -89,5 +64,4 @@ export class User extends BaseEntity {
     nullable: false
   })
   lastName: string;
->>>>>>> 39bad04c7e3e38fa609938f7ace2c483444eaeba
 }
