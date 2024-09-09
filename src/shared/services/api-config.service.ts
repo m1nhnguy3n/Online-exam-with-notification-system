@@ -77,9 +77,10 @@ export class ApiConfigService {
       password: this.getString('DB_PASSWORD'),
       database: this.getString('DB_DATABASE'),
       synchronize: this.isDevelopment,
+      // synchronize: false,
       migrationsRun: true,
       // logging: this.getBoolean('ENABLE_ORM_LOGS'),
-      ssl: this.getBoolean('DB_SSL')
+      // ssl: this.getBoolean('DB_SSL')
     };
   }
 

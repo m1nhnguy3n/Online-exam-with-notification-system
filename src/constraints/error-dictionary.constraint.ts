@@ -4,5 +4,7 @@ export enum ERRORS_DICTIONARY {
   USER_NOT_FOUND = 'User not found',
 
   // CLASS VALIDATOR
-  VALIDATION_ERROR = 'ValidationError'
+  VALIDATION_ERROR = 'ValidationError',
+
+  CREATE_QUESTION_FAIL='Create question fail'
 }
