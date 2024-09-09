@@ -9,4 +9,8 @@ export enum ERRORS_DICTIONARY {
   AUTHORIZE_ERROR = "You're not authorize",
   TOKEN_ERROR = "Token invalid",
 
+  // Category
+  CREATE_CATEGORY_ERROR = 'Create category failed',
+  NOT_FOUND_ANY_CATEGORY = 'Not found any category',
+  EXISTING_A_RECORD = 'Existing a record'
 }
