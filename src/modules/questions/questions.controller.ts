@@ -2,14 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { UUID } from 'crypto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Questions')
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Post()
-  async create(teacherId:string,@Body() createQuestionDto: CreateQuestionDto) {
-    return await this.questionsService.create(teacherId, createQuestionDto);
+  async create(teacherId:UUID,@Body() createQuestionDto: CreateQuestionDto) {
+    return await this.questionsService.create('66da722a-6528-800b-98e3-6be4a2cebe04', createQuestionDto);
   }
 
   @Get()

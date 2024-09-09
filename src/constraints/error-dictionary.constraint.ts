@@ -9,4 +9,6 @@ export enum ERRORS_DICTIONARY {
   AUTHORIZE_ERROR = "You're not authorize",
   TOKEN_ERROR = "Token invalid",
 
+
+  CREATE_QUESTION_FAIL='Create question fail'
 }
