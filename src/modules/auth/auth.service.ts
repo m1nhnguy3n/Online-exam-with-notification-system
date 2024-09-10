@@ -18,15 +18,20 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto): Promise<{ token: string }> {
-    const user = await this.userRepository.findOneBy({ email: loginDto.email });
-    if(!user){
-      throw new Error('User not found')
+    try {
+      const user = await this.userRepository.findOneBy({ email: loginDto.email });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      if (!(await bcrypt.compare(loginDto.password, user.password))) {
+        throw new Error('The password is incorrect');
+      }
+      const payload = { userId: user.id, role: user.role };
+      const token = this.jwtService.sign(payload);
+      return { token };
+    } catch (error) {
+      throw new Error(error.message || 'Login failed');
     }
-    if (!(await bcrypt.compare(loginDto.password, user.password))) {
-      throw new Error('The password is incorrect');
-    }
-    const payload = { userId: user.id, role: user.role };
-    const token = this.jwtService.sign(payload)
-    return { token };
   }
+  
 }
