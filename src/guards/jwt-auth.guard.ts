@@ -20,15 +20,12 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
-    console.log("xxxxxxx",token);
-
     if (!token) {
       throw new BadRequestException(ERRORS_DICTIONARY.TOKEN_ERROR);
     }
 
     try {
       const payload = this.jwtService.verify(token);
-      console.log("PAYLOAD NE: ", payload)
       const user = await this.userRepository.findOneBy(payload.userId)
 
       if(!user) {
@@ -39,8 +36,6 @@ export class JwtAuthGuard implements CanActivate {
 
       return true;
     } catch(error) {
-      console.log(error.message);
-
       throw new BadRequestException(error.message)
     }
   }

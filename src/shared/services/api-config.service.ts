@@ -19,7 +19,7 @@ export class ApiConfigService {
     return this.nodeEnv === 'test';
   }
 
-  private getNumber(key: string): number {
+  getNumber(key: string): number {
     const value = this.configService.get<string>(key);
     const numberValue = Number(value);
 
@@ -30,7 +30,7 @@ export class ApiConfigService {
     return numberValue;
   }
 
-  private getBoolean(key: string): boolean {
+  getBoolean(key: string): boolean {
     const value = this.configService.get<string>(key);
 
     if (value === undefined) {
@@ -44,7 +44,7 @@ export class ApiConfigService {
     }
   }
 
-  private getString(key: string): string {
+  getString(key: string): string {
     const value = this.configService.get<string>(key);
 
     if (value === undefined) {
@@ -91,10 +91,6 @@ export class ApiConfigService {
 
   get documentationEnabled(): boolean {
     return this.getBoolean('ENABLE_DOCUMENTATION');
-  }
-
-  get JWTkey(): string {
-    return this.getString('JWT_SECRET_KEY');
   }
 
   get apiDocumentationCredentials() {

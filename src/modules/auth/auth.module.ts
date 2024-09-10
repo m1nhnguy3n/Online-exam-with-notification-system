@@ -11,7 +11,7 @@ import { ApiConfigService } from 'src/shared/services/api-config.service';
 
       JwtModule.registerAsync({
           useFactory: (configService: ApiConfigService) => ({
-            secret: configService.JWTkey,
+            secret: configService.getString('JWT_SECRET_KEY'),
             signOptions: { expiresIn: '15d' },
           }),
           inject: [ApiConfigService]
