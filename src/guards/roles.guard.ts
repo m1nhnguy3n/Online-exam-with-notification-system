@@ -23,6 +23,6 @@ export class RolesGuard implements CanActivate {
       throw new BadRequestException(ERRORS_DICTIONARY.AUTHORIZE_ERROR);
     }
 
-    return true; 
+    return true;
   }
 }
