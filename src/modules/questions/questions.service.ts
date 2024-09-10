@@ -15,8 +15,8 @@ import { Paginate } from './dto/paginate.dto';
 export class QuestionsService {
   constructor(@InjectRepository(Question) private questionRepository: Repository<Question>, private userService: UserService) { }
   
-  async create(teacherId: UUID, createQuestionDto: CreateQuestionDto): Promise<Question> {
-    
+  async create(userId: UUID, createQuestionDto: CreateQuestionDto): Promise<Question> {
+    const { id } = await this.userService.findOneTeacherByUserId(userId);
     const { categoryId, content, type } = createQuestionDto;
     const question = this.questionRepository.create({
       content: content,
@@ -25,7 +25,7 @@ export class QuestionsService {
         id: categoryId
       },
       teacher: {
-        id: teacherId
+        id: id
       }
     });
 
