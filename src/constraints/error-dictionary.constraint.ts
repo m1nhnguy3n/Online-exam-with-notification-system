@@ -22,5 +22,8 @@ export enum ERRORS_DICTIONARY {
 
   // EXAM
   EXAM_NOT_FOUND = 'Exam not found',
-  EXAM_NAME_EXIST = 'Exam name already exists'
+  EXAM_NAME_EXIST = 'Exam name already exists',
+  //Option
+  CREATE_OPTION_FAIL = 'Create question fail',
+  OPTION_NOT_FOUND='Option not found'
 }

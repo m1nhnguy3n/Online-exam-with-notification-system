@@ -10,23 +10,23 @@ import { QuestionsService } from '../questions/questions.service';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { QuestionType } from 'src/entities/enums/question-type.enum';
 import e from 'express';
+import { FindOneOptionDTO } from './dto/find-one-option.dto';
 
 @Injectable()
-
 export class OptionsService {
   constructor(
     @InjectRepository(Option) private optionRepository: Repository<Option>,
     private userService: UserService,
-    private questionService:QuestionsService
+    private questionService: QuestionsService
   ) {}
   async create(userId: UUID, dto: CreateOptionDto) {
     await this.userService.findOneTeacherByUserId(userId);
-    
+
     const { content, isCorrect, questionId } = dto;
-    const options = await this.getAllOptionByQuestionId(questionId)
+    const options = await this.getAllOptionByQuestionId(questionId);
     const { type } = await this.questionService.getOneOrExist(questionId);
-    
-    var optionIns:Option=null
+
+    var optionIns: Option = null;
 
     if (type === QuestionType.SINGLE_CHOICE) {
       //check question is
@@ -39,7 +39,6 @@ export class OptionsService {
             id: questionId
           }
         });
-        
       } else {
         if (isCorrect === false) {
           optionIns = this.optionRepository.create({
@@ -65,7 +64,7 @@ export class OptionsService {
         }
       });
     }
-    
+
     const newOption = await this.optionRepository.save(optionIns);
     if (!newOption) {
       throw new BadRequestException({
@@ -75,20 +74,28 @@ export class OptionsService {
     return newOption;
   }
 
-  findAll() {
-    return `This action returns all options`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} option`;
+  async findOneOrThrow(optionId: UUID) {
+    const foundOption = await this.optionRepository.findOne({
+      where: {
+        id: optionId
+      }
+    });
+    if (!foundOption) {
+      throw new BadRequestException({
+        message:ERRORS_DICTIONARY.OPTION_NOT_FOUND
+      })
+    }
+    return foundOption;
   }
 
   update(id: number, updateOptionDto: UpdateOptionDto) {
-    return `This action updates a #${id} option`;
+    return `This ation updates a #${id} option`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} option`;
+  async remove(optionId:UUID) {
+    await this.findOneOrThrow(optionId);
+    const obj = await this.optionRepository.softDelete(optionId);
+    return obj;
   }
   async getAllOptionByQuestionId(questionId: UUID) {
     try {
@@ -98,8 +105,7 @@ export class OptionsService {
         .getMany();
       return options;
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
-    
   }
 }
