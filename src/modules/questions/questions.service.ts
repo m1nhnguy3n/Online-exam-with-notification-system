@@ -41,7 +41,6 @@ export class QuestionsService {
     return newQuestion;
   }
 
-  
   findAll() {
     return `This action returns all questions`;
   }
