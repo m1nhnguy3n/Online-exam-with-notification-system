@@ -13,8 +13,11 @@ import { Paginate } from './dto/paginate.dto';
 
 @Injectable()
 export class QuestionsService {
-  constructor(@InjectRepository(Question) private questionRepository: Repository<Question>, private userService: UserService) { }
-  
+  constructor(
+    @InjectRepository(Question) private questionRepository: Repository<Question>,
+    private userService: UserService
+  ) {}
+
   async create(userId: UUID, createQuestionDto: CreateQuestionDto): Promise<Question> {
     const { id } = await this.userService.findOneTeacherByUserId(userId);
     const { categoryId, content, type } = createQuestionDto;
@@ -29,7 +32,7 @@ export class QuestionsService {
       }
     });
 
-    const newQuestion = await this.questionRepository.save(question)
+    const newQuestion = await this.questionRepository.save(question);
     if (!newQuestion) {
       throw new BadRequestException({
         message: ERRORS_DICTIONARY.CREATE_QUESTION_FAIL
@@ -38,30 +41,25 @@ export class QuestionsService {
     return newQuestion;
   }
 
-  
   findAll() {
     return `This action returns all questions`;
   }
 
-  async getAllQuestions(user:any, dto: Paginate){
-    const limit=dto.limit
-    const offset=(dto.page-1)*limit
-    const query = this.questionRepository
-      .createQueryBuilder('question')
-      .limit(limit)
-      .offset(offset);
-      
-    
+  async getAllQuestions(user: any, dto: Paginate) {
+    const limit = dto.limit;
+    const offset = (dto.page - 1) * limit;
+    const query = this.questionRepository.createQueryBuilder('question').limit(limit).offset(offset);
+
     if (!user) {
-      throw new ForbiddenException({})
+      throw new ForbiddenException({});
     }
-    if (user.role === "teacher") {
-      const { id } = await this.userService.findOneTeacherByUserId(user.id)
+    if (user.role === 'teacher') {
+      const { id } = await this.userService.findOneTeacherByUserId(user.id);
       return query
         .innerJoinAndSelect('question.teacher', 'teacher')
         .select(['question.type', 'question.content'])
         .where('teacher.id = :teacherId', { teacherId: id })
-        .getMany(); 
+        .getMany();
     }
     const questions = await query.getMany();
     return questions;
@@ -70,9 +68,9 @@ export class QuestionsService {
   async findOne(questionId: UUID) {
     return await this.questionRepository.findOne({
       where: {
-        id:questionId
+        id: questionId
       }
-    })
+    });
   }
 
   update(id: number, updateQuestionDto: UpdateQuestionDto) {
@@ -80,13 +78,17 @@ export class QuestionsService {
   }
 
   async remove(questionId: UUID) {
-    const foundQuestion = await this.findOne(questionId);
-    if (!foundQuestion) {
-      throw new BadRequestException({
-        message:ERRORS_DICTIONARY.QUESTION_NOT_FOUND
-      })
-    }
-    const obj =await this.questionRepository.softDelete(questionId)
+    const question=await this.getOneOrExist(questionId)
+    const obj = await this.questionRepository.softDelete(questionId);
     return obj;
+  }
+  async getOneOrExist(questionId: UUID) {
+    const question = await this.findOne(questionId);
+    if (!question) {
+      throw new BadRequestException({
+        message: ERRORS_DICTIONARY.QUESTION_NOT_FOUND
+      });
+    }
+    return question
   }
 }
