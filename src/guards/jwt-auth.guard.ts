@@ -17,8 +17,8 @@ export class JwtAuthGuard implements CanActivate {
       // cái request ni sẽ được đem qua roles.guard hắn so sánh
       request.user = payload;
       return true;
-    } catch {
-      return false;
+    } catch(error) {
+      throw new Error(error.message)
     }
   }
 

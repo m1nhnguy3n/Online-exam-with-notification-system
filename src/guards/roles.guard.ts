@@ -1,5 +1,6 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { UserRole } from 'src/entities/role.enum';
 
 
@@ -16,6 +17,12 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.role === role);
+    const hasRole = requiredRoles.some((role) => user.role === role);
+
+    if (!hasRole) {
+      throw new BadRequestException(ERRORS_DICTIONARY.AUTHORIZE_ERROR);
+    }
+
+    return true; 
   }
 }
