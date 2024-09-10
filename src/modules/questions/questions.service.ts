@@ -92,6 +92,7 @@ export class QuestionsService {
         id: questionId
       }
     });
+    
     if (!question) {
       throw new BadRequestException({
         message: ERRORS_DICTIONARY.QUESTION_NOT_FOUND
@@ -99,4 +100,5 @@ export class QuestionsService {
     }
     return question;
   }
+  
 }
