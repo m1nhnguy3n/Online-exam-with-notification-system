@@ -93,6 +93,10 @@ export class ApiConfigService {
     return this.getBoolean('ENABLE_DOCUMENTATION');
   }
 
+  get JWTkey(): string {
+    return this.getString('JWT_SECRET_KEY');
+  }
+
   get apiDocumentationCredentials() {
     return {
       name: this.getString('API_DOCUMENTATION_CREDENTIALS_USERNAME'),

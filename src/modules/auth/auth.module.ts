@@ -4,14 +4,18 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { ApiConfigService } from 'src/shared/services/api-config.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '15d' },
-    }),
+  imports: [ TypeOrmModule.forFeature([User]),
+
+      JwtModule.registerAsync({
+          useFactory: (configService: ApiConfigService) => ({
+            secret: configService.JWTkey,
+            signOptions: { expiresIn: '15d' },
+          }),
+          inject: [ApiConfigService]
+      })
   ],
   controllers: [AuthController],
   providers: [AuthService],
