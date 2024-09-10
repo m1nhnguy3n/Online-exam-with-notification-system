@@ -51,7 +51,6 @@ export class OptionsService {
         }
       }
     }
-
     if (type === QuestionType.MULTIPLE_CHOICES) {
       optionIns = this.optionRepository.create({
         content: content,
@@ -61,7 +60,6 @@ export class OptionsService {
         }
       });
     }
-
     const newOption = await this.optionRepository.save(optionIns);
     if (!newOption) {
       throw new BadRequestException({
