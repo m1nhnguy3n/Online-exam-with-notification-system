@@ -83,7 +83,11 @@ export class QuestionsService {
     return obj;
   }
   async getOneOrExist(questionId: UUID) {
-    const question = await this.findOne(questionId);
+    const question = await this.questionRepository.findOne({
+      where: {
+        id: questionId
+      }
+    });
     if (!question) {
       throw new BadRequestException({
         message: ERRORS_DICTIONARY.QUESTION_NOT_FOUND
