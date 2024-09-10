@@ -86,6 +86,6 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 nest g res login
 
-## use Authorize cho các chức năng
-- Ae dùng annotation @UseGuards(JwtAuthGuard, RolesGuard) này ở trên class ...Controller
-- và dùng annotation @Roles('admin') vào chỗ function, route ( ví dụ muốn cho ai cũng dùng được thì đừng thêm @Roles ở trên là được)
+## use Authorize to function
+- use this annotation @UseGuards(JwtAuthGuard, RolesGuard) on class ...Controller
+- use this annotation @Roles('admin') on function, route (ex: You want to for everyone to use. dont use this anotation is oke )
