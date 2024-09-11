@@ -8,54 +8,57 @@ const api_documentation_credentials = {
 };
 
 export function configSwagger(app: INestApplication) {
-    const config = new DocumentBuilder()
-        .setTitle('Exam Online project')
-        .setDescription('## The Online Exam API description')
-        .setVersion('1.0')
-        .addSecurity('token', { type: 'http', scheme: 'bearer' })
-        .build();
-    const document = SwaggerModule.createDocument(app, config);
+  const config = new DocumentBuilder()
+    .setTitle('Exam Online project')
+    .setDescription('## The Online Exam API description')
+    .setVersion('1.0')
+    .addSecurity('token', { type: 'http', scheme: 'bearer' })
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
 
-    const http_adapter = app.getHttpAdapter();
-    http_adapter.use('/api-docs', (req: Request, res: Response, next: NextFunction) => {
-        function parseAuthHeader(input: string): { name: string; pass: string } {
-            const [, encodedPart] = input.split(' ');
+  const http_adapter = app.getHttpAdapter();
+  http_adapter.use(
+    '/api-docs',
+    (req: Request, res: Response, next: NextFunction) => {
+      function parseAuthHeader(input: string): { name: string; pass: string } {
+        const [, encodedPart] = input.split(' ');
 
-            const buff = Buffer.from(encodedPart, 'base64');
-            const text = buff.toString('ascii');
-            const [name, pass] = text.split(':');
+        const buff = Buffer.from(encodedPart, 'base64');
+        const text = buff.toString('ascii');
+        const [name, pass] = text.split(':');
 
-            return { name, pass };
+        return { name, pass };
+      }
+
+      function unauthorizedResponse(): void {
+        if (http_adapter.getType() === 'fastify') {
+          res.statusCode = 401;
+          res.setHeader('WWW-Authenticate', 'Basic');
+        } else {
+          res.status(401);
+          res.set('WWW-Authenticate', 'Basic');
         }
 
-        function unauthorizedResponse(): void {
-            if (http_adapter.getType() === 'fastify') {
-                res.statusCode = 401;
-                res.setHeader('WWW-Authenticate', 'Basic');
-            } else {
-                res.status(401);
-                res.set('WWW-Authenticate', 'Basic');
-            }
-
-            next();
-        }
-
-        if (!req.headers.authorization) {
-            return unauthorizedResponse();
-        }
-
-        const credentials = parseAuthHeader(req.headers.authorization);
-
-        if (
-            credentials?.name !== api_documentation_credentials.name ||
-            credentials?.pass !== api_documentation_credentials.pass
-        ) {
-            return unauthorizedResponse();
-        }
         next();
-    });
-    SwaggerModule.setup('api-docs', app, document, {
-        swaggerOptions: { persistAuthorization: true },
-        customSiteTitle: 'API Exam Documentation'
-    });
+      }
+
+      if (!req.headers.authorization) {
+        return unauthorizedResponse();
+      }
+
+      const credentials = parseAuthHeader(req.headers.authorization);
+
+      if (
+        credentials?.name !== api_documentation_credentials.name ||
+        credentials?.pass !== api_documentation_credentials.pass
+      ) {
+        return unauthorizedResponse();
+      }
+      next();
+    },
+  );
+  SwaggerModule.setup('api-docs', app, document, {
+    swaggerOptions: { persistAuthorization: true },
+    customSiteTitle: 'API Exam Documentation',
+  });
 }

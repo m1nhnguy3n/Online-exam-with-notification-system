@@ -1,3 +1,4 @@
+import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config'; // Import the ConfigModule from the correct module
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -24,6 +25,7 @@ import { GlobalException } from './exceptions/global.exception';
 			inject: [ApiConfigService],
 		}),
 		UserModule,
+		AuthModule,
 	],
 	controllers: [AppController],
 	providers: [
@@ -35,7 +37,7 @@ import { GlobalException } from './exceptions/global.exception';
 	],
 })
 export class AppModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggingMiddleware).forRoutes('*');
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
 }

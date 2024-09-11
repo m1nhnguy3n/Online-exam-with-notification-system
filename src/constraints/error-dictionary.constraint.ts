@@ -5,4 +5,8 @@ export enum ERRORS_DICTIONARY {
 
   // CLASS VALIDATOR
   VALIDATION_ERROR = 'ValidationError',
+  //
+  AUTHORIZE_ERROR = "You're not authorize",
+  TOKEN_ERROR = "Token invalid",
+
 }

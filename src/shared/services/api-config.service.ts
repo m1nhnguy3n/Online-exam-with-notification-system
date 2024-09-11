@@ -5,100 +5,100 @@ import { join } from 'path';
 
 @Injectable()
 export class ApiConfigService {
-    constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {}
 
-    get isDevelopment(): boolean {
-        return this.nodeEnv === 'development';
+  get isDevelopment(): boolean {
+    return this.nodeEnv === 'development';
+  }
+
+  get isProduction(): boolean {
+    return this.nodeEnv === 'production';
+  }
+
+  get isTest(): boolean {
+    return this.nodeEnv === 'test';
+  }
+
+  getNumber(key: string): number {
+    const value = this.configService.get<string>(key);
+    const numberValue = Number(value);
+
+    if (isNaN(numberValue)) {
+      throw new Error(`${key} environment variable is not a number`);
     }
 
-    get isProduction(): boolean {
-        return this.nodeEnv === 'production';
+    return numberValue;
+  }
+
+  getBoolean(key: string): boolean {
+    const value = this.configService.get<string>(key);
+
+    if (value === undefined) {
+      throw new Error(`${key} environment variable is not defined`);
     }
 
-    get isTest(): boolean {
-        return this.nodeEnv === 'test';
+    try {
+      return Boolean(JSON.parse(value));
+    } catch {
+      throw new Error(`${key} environment variable is not a boolean`);
+    }
+  }
+
+  getString(key: string): string {
+    const value = this.configService.get<string>(key);
+
+    if (value === undefined) {
+      throw new Error(`${key} environment variable is not defined`);
     }
 
-    private getNumber(key: string): number {
-        const value = this.configService.get<string>(key);
-        const numberValue = Number(value);
+    return value.replace(/\\n/g, '\n');
+  }
 
-        if (isNaN(numberValue)) {
-            throw new Error(`${key} environment variable is not a number`);
-        }
+  get nodeEnv(): string {
+    return this.getString('NODE_ENV');
+  }
 
-        return numberValue;
-    }
+  get fallbackLanguage(): string {
+    return this.getString('FALLBACK_LANGUAGE');
+  }
 
-    private getBoolean(key: string): boolean {
-        const value = this.configService.get<string>(key);
+  get postgresConfig(): TypeOrmModuleOptions {
+    const entities = [join(process.cwd(), 'dist/**/*.entity.js')];
 
-        if (value === undefined) {
-            throw new Error(`${key} environment variable is not defined`);
-        }
+    return {
+      entities,
+      keepConnectionAlive: !this.isTest,
+      dropSchema: this.isTest,
+      type: 'postgres',
+      name: 'default',
+      host: this.getString('DB_HOST'),
+      port: this.getNumber('DB_PORT'),
+      username: this.getString('DB_USERNAME'),
+      password: this.getString('DB_PASSWORD'),
+      database: this.getString('DB_DATABASE'),
+      synchronize: this.isDevelopment ? true : false,
+      migrationsRun: true,
+      migrations: [`${__dirname}/../../db/migrations/*{.ts,.js}`],
+      migrationsTableName: 'migrations',
+      ssl: this.getBoolean('DB_SSL'),
+      logging: this.getBoolean('ENABLE_ORM_LOGS')
+    };
+  }
 
-        try {
-            return Boolean(JSON.parse(value));
-        } catch {
-            throw new Error(`${key} environment variable is not a boolean`);
-        }
-    }
+  get serverConfig() {
+    return {
+      port: this.configService.get<number>('PORT') || 4000
+    };
+  }
 
-    private getString(key: string): string {
-        const value = this.configService.get<string>(key);
+  get accountSwaggerConfig() {
+    return {
+      name: this.getString('SWAGGER_ACCOUNT_NAME'),
+      pass: this.getString('SWAGGER_ACCOUNT_PASS')
+    };
+  }
 
-        if (value === undefined) {
-            throw new Error(`${key} environment variable is not defined`);
-        }
-
-        return value.replace(/\\n/g, '\n');
-    }
-
-    get nodeEnv(): string {
-        return this.getString('NODE_ENV');
-    }
-
-    get fallbackLanguage(): string {
-        return this.getString('FALLBACK_LANGUAGE');
-    }
-
-    get postgresConfig(): TypeOrmModuleOptions {
-        const entities = [join(process.cwd(), 'dist/**/*.entity.js')];
-
-        return {
-            entities,
-            keepConnectionAlive: !this.isTest,
-            dropSchema: this.isTest,
-            type: 'postgres',
-            name: 'default',
-            host: this.getString('DB_HOST'),
-            port: this.getNumber('DB_PORT'),
-            username: this.getString('DB_USERNAME'),
-            password: this.getString('DB_PASSWORD'),
-            database: this.getString('DB_DATABASE'),
-            synchronize: this.isDevelopment ? true : false,
-            migrationsRun: true,
-            migrations: [`${__dirname}/../../db/migrations/*{.ts,.js}`],
-            migrationsTableName: 'migrations',
-            ssl: this.getBoolean('DB_SSL'),
-            logging: this.getBoolean('ENABLE_ORM_LOGS')
-        };
-    }
-
-    get serverConfig() {
-        return {
-            port: this.configService.get<number>('PORT') || 4000
-        };
-    }
-
-    get accountSwaggerConfig() {
-        return {
-            name: this.getString('SWAGGER_ACCOUNT_NAME'),
-            pass: this.getString('SWAGGER_ACCOUNT_PASS')
-        };
-    }
-
-    get documentationEnabled(): boolean {
-        return this.getBoolean('ENABLE_DOCUMENTATION');
-    }
+  get documentationEnabled(): boolean {
+    return this.getBoolean('ENABLE_DOCUMENTATION');
+  }
 }
