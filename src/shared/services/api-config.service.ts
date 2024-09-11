@@ -76,10 +76,12 @@ export class ApiConfigService {
       username: this.getString('DB_USERNAME'),
       password: this.getString('DB_PASSWORD'),
       database: this.getString('DB_DATABASE'),
-      synchronize: this.isDevelopment,
+      synchronize: this.isDevelopment ? true : false,
       migrationsRun: true,
-      logging: this.getBoolean('ENABLE_ORM_LOGS'),
-      ssl: this.getBoolean('DB_SSL')
+      migrations: [`${__dirname}/../../db/migrations/*{.ts,.js}`],
+      migrationsTableName: 'migrations',
+      ssl: this.getBoolean('DB_SSL'),
+      logging: this.getBoolean('ENABLE_ORM_LOGS')
     };
   }
 
@@ -89,14 +91,14 @@ export class ApiConfigService {
     };
   }
 
-  get documentationEnabled(): boolean {
-    return this.getBoolean('ENABLE_DOCUMENTATION');
+  get accountSwaggerConfig() {
+    return {
+      name: this.getString('SWAGGER_ACCOUNT_NAME'),
+      pass: this.getString('SWAGGER_ACCOUNT_PASS')
+    };
   }
 
-  get apiDocumentationCredentials() {
-    return {
-      name: this.getString('API_DOCUMENTATION_CREDENTIALS_USERNAME'),
-      pass: this.getString('API_DOCUMENTATION_CREDENTIALS_PASSWORD')
-    };
+  get documentationEnabled(): boolean {
+    return this.getBoolean('ENABLE_DOCUMENTATION');
   }
 }
