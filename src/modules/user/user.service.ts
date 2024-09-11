@@ -27,11 +27,7 @@ export class UserService {
 
       const userData = await this.userRepository.createUser(createUserDto);
 
-      await this.studentRepository.create(
-        userData.id,
-        parentNumber
-      );
-
+      await this.studentRepository.create(userData.id, parentNumber);
 
       return userData;
     } catch (error) {
@@ -67,8 +63,8 @@ export class UserService {
     return await this.userRepository.findAllUser();
   }
 
-  async findAllTeacher(){
-    return await this.teacherRepository.findAll()
+  async findAllTeacher() {
+    return await this.teacherRepository.findAll();
   }
 
   async findOne(id: UUID): Promise<User> {
@@ -121,6 +117,11 @@ export class UserService {
 
     return userRemoved;
   }
-
-  async;
+  async findOneTeacherByUserId(userId: UUID) {
+    const teacher = await this.teacherRepository.findTeacherByUserId(userId);
+    if (teacher) {
+      return teacher;
+    }
+    return null;
+  }
 }

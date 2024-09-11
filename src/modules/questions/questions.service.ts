@@ -51,7 +51,9 @@ export class QuestionsService {
     const query = this.questionRepository.createQueryBuilder('question').limit(limit).offset(offset);
 
     if (!user) {
-      throw new ForbiddenException({});
+      throw new ForbiddenException({
+        message:ERRORS_DICTIONARY.NOT_RIGHTS
+      });
     }
     if (user.role === 'teacher') {
       const { id } = await this.userService.findOneTeacherByUserId(user.id);
@@ -61,8 +63,12 @@ export class QuestionsService {
         .where('teacher.id = :teacherId', { teacherId: id })
         .getMany();
     }
-    const questions = await query.getMany();
-    return questions;
+    if (user.role === 'admin') {
+      return await query.getMany();
+    }
+    throw new BadRequestException({
+      message: ERRORS_DICTIONARY.NOT_RIGHTS
+    });
   }
 
   async findOne(questionId: UUID) {
