@@ -9,7 +9,7 @@ export class StudentClass extends BaseEntity {
   @Column({
     type: 'uuid'
   })
-  public studentID: UUID;
+  public studentId: UUID;
 
   @Column({
     type: 'uuid'
