@@ -13,7 +13,8 @@ export class JwtAuthGuard implements CanActivate {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    // private readonly userRepository: Repository<User>,
+    private configService: ApiConfigService,
     private reflector: Reflector, private jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,14 +26,14 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verify(token);
-      const user = await this.userRepository.findOneBy(payload.userId)
+      const payload = this.jwtService.verify(token, {secret: this.configService.getString("JWT_SECRET_KEY")});
+      // const user = await this.userRepository.findOneBy(payload.userId)
 
-      if(!user) {
-        throw new BadRequestException(ERRORS_DICTIONARY.TOKEN_ERROR);
-      }
+      // if(!user) {
+      //   throw new BadRequestException(ERRORS_DICTIONARY.TOKEN_ERROR);
+      // }
 
-      request.user = user;
+      request['user'] = payload;
 
       return true;
     } catch(error) {
