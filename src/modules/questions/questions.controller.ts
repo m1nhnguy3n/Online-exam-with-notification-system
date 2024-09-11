@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query, UseInterceptors } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
@@ -6,6 +6,8 @@ import { UUID } from 'crypto';
 import { ApiTags } from '@nestjs/swagger';
 import { Paginate } from './dto/paginate.dto';
 import { FindOneQuestionDTO } from './dto/find-one-question.dto';
+import { TransformInterceptor } from 'src/interceptors/transform-responce.interceptor';
+
 
 
 @ApiTags('Questions')
@@ -15,8 +17,10 @@ export class QuestionsController {
 
   @Post()
   async create(@Request() req, @Body() createQuestionDto: CreateQuestionDto) {
-    const teacherId: UUID = req.user;
-    return await this.questionsService.create('66da722a-6528-800b-98e3-6be4a2cebe04', createQuestionDto);
+    const userId: UUID = req.user;
+    return await this.questionsService.create(userId,createQuestionDto)
+    // const teacherId: UUID = req.user;
+    // return await this.questionsService.create('66da722a-6528-800b-98e3-6be4a2cebe04', createQuestionDto);
   }
 
   @Get(':id')
@@ -35,15 +39,18 @@ export class QuestionsController {
   }
 
   @Get('')
+  @UseInterceptors(TransformInterceptor)
   async getAllQuestion(@Request() req, @Query() dto: Paginate) {
     const user = req.user;
-    return this.questionsService.getAllQuestions(user, dto);
-    // return this.questionsService.getAllQuestions(
+    
+    // const data = await this.questionsService.getAllQuestions(
     //   {
     //     userId: '66d913ff-4a80-800b-8cab-0cdb8b81023a',
-    //     role:'admin'
+    //     role: 'admin'
     //   },
     //   dto
     // );
+    const data = await this.questionsService.getAllQuestions(user, dto);
+    return data
   }
 }
