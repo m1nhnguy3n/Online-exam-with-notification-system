@@ -18,8 +18,8 @@ export class QuestionsService {
     private userService: UserService
   ) {}
 
-  async create(userId: UUID, createQuestionDto: CreateQuestionDto): Promise<Question> {
-    const { id } = await this.userService.findOneTeacherByUserId(userId);
+  async create(user: any, createQuestionDto: CreateQuestionDto): Promise<Question> {
+    const { id } = await this.userService.findOneTeacherByUserId(user.userId);
     const { categoryId, content, type } = createQuestionDto;
     const question = this.questionRepository.create({
       content: content,
@@ -56,11 +56,11 @@ export class QuestionsService {
       });
     }
     if (user.role === 'teacher') {
-      const { id } = await this.userService.findOneTeacherByUserId(user.id);
+      const teacher = await this.userService.findOneTeacherByUserId(user.userId);
       return query
         .innerJoinAndSelect('question.teacher', 'teacher')
         .select(['question.type', 'question.content'])
-        .where('teacher.id = :teacherId', { teacherId: id })
+        .where('teacher.id = :teacherId', { teacherId: teacher.id })
         .getMany();
     }
     if (user.role === 'admin') {

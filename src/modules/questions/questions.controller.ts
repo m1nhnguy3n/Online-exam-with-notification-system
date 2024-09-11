@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query, UseInterceptors, UseGuards } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
@@ -7,6 +7,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { Paginate } from './dto/paginate.dto';
 import { FindOneQuestionDTO } from './dto/find-one-question.dto';
 import { TransformInterceptor } from 'src/interceptors/transform-responce.interceptor';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { User } from 'src/decorators/get-user.decorator';
 
 
 
@@ -16,11 +18,8 @@ export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Post()
-  async create(@Request() req, @Body() createQuestionDto: CreateQuestionDto) {
-    const userId: UUID = req.user;
-    return await this.questionsService.create(userId,createQuestionDto)
-    // const teacherId: UUID = req.user;
-    // return await this.questionsService.create('66da722a-6528-800b-98e3-6be4a2cebe04', createQuestionDto);
+  async create(@User() user, @Body() createQuestionDto: CreateQuestionDto) {
+    return await this.questionsService.create(user, createQuestionDto);
   }
 
   @Get(':id')
@@ -34,23 +33,16 @@ export class QuestionsController {
   }
 
   @Delete(':id')
+  @UseInterceptors(TransformInterceptor)
   async remove(@Param('id') dto: FindOneQuestionDTO) {
     return await this.questionsService.remove(dto.questionId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('')
   @UseInterceptors(TransformInterceptor)
-  async getAllQuestion(@Request() req, @Query() dto: Paginate) {
-    const user = req.user;
-    
-    // const data = await this.questionsService.getAllQuestions(
-    //   {
-    //     userId: '66d913ff-4a80-800b-8cab-0cdb8b81023a',
-    //     role: 'admin'
-    //   },
-    //   dto
-    // );
+  async getAllQuestion(@User() user, @Query() dto: Paginate) {
     const data = await this.questionsService.getAllQuestions(user, dto);
-    return data
+    return data;
   }
 }
