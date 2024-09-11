@@ -8,9 +8,10 @@ import { SharedModule } from './shared/shared.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { UserModule } from './modules/user/user.module';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { GlobalException } from './exceptions/global.exception';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +35,10 @@ import { CategoriesModule } from './modules/categories/categories.module';
     {
       provide: APP_FILTER,
       useClass: GlobalException
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor
     }
   ]
 })

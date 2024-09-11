@@ -1,135 +1,48 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseUUIDPipe,
-  HttpStatus,
-  UseFilters,
-  Req,
-  Query
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { query, Request } from 'express';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { QueryCategoryDto } from './dto/query-category.dto';
 @ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Created'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_ACCEPTABLE,
-    description: 'Unique fields'
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Validation failed'
-  })
+  @ApiCreatedResponse({ description: 'Created' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
-    const data = await this.categoriesService.create(createCategoryDto);
-
-    return {
-      success: true,
-      data,
-      message: 'Created'
-    };
+    return await this.categoriesService.create(createCategoryDto);
   }
 
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Found resources'
-  })
+  @ApiOkResponse({ description: 'Found resources' })
   @Get()
   async findAll(@Query() queryCategoryDto: QueryCategoryDto) {
     const { page, limit, ...searchQueries } = queryCategoryDto;
-    console.log({ page, limit, ...searchQueries });
-    const data = await this.categoriesService.findAll(page, limit, searchQueries);
 
-    return {
-      success: true,
-      data,
-      message: 'Success'
-    };
+    return await this.categoriesService.findAll(page, limit, searchQueries);
   }
 
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Found resource'
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Validation Failed'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Not found any resource'
-  })
+  @ApiOkResponse({ description: 'Found resource' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
-    const data = await this.categoriesService.findOne(id);
-
-    return {
-      success: true,
-      data,
-      message: 'Success'
-    };
+    return await this.categoriesService.findOne(id);
   }
 
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Updated'
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Validation Failed'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Not found any resource'
-  })
+  @ApiOkResponse({ description: 'Updated' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Patch(':id')
   async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateCategoryDto: UpdateCategoryDto) {
-    const numResourcesAffected = await this.categoriesService.update(id, updateCategoryDto);
-
-    return {
-      success: true,
-      numResourcesAffected,
-      message: 'Success'
-    };
+    return await this.categoriesService.update(id, updateCategoryDto);
   }
 
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Deleted'
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Validation Failed'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Not found any resource'
-  })
+  @ApiOkResponse({ description: 'Deleted' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Delete(':id')
   async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
-    const numResourcesAffected = await this.categoriesService.remove(id);
-
-    return {
-      success: true,
-      data: { numResourcesAffected },
-      message: 'Success'
-    };
+    return await this.categoriesService.remove(id);
   }
 }

@@ -1,5 +1,5 @@
 export class PaginationResult<T> {
-  data: T[];
+  records: T[];
   total: number;
   page: number;
   limit: number;

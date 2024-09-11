@@ -12,5 +12,6 @@ export enum ERRORS_DICTIONARY {
   // Category
   CREATE_CATEGORY_ERROR = 'Create category failed',
   NOT_FOUND_ANY_CATEGORY = 'Not found any category',
-  EXISTING_A_RECORD = 'Existing a record'
+  EXISTING_A_RECORD = 'Existing a record',
+  UNIQUE_CONSTRAINT = 'Unique field in DB'
 }

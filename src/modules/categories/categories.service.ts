@@ -1,13 +1,13 @@
 import { PaginationResult } from './../../shared/interfaces/pagination-result.interface';
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Like, QueryFailedError, Repository, UpdateResult } from 'typeorm';
 import { Category } from 'src/entities/category.entity';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
-import { ResponseException } from 'src/shared/exceptions/response.exception';
+import { ResponseException } from '../../exceptions/response/response.exception';
 
 @Injectable()
 export class CategoriesService {
@@ -17,26 +17,18 @@ export class CategoriesService {
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
-    // Find a record which existing name
-    const existingCategory = await this.categoriesRepository.findOne({
-      where: { name: createCategoryDto.name },
-      withDeleted: true
-    });
+    const newCategory = this.categoriesRepository.create(createCategoryDto);
 
-    if (existingCategory) {
-      throw new HttpException(
-        new ResponseException(ERRORS_DICTIONARY.EXISTING_A_RECORD, [
-          `Existing a record with name=${createCategoryDto.name} in DB`
-        ]),
-        HttpStatus.BAD_REQUEST
-      );
-    }
+    return await this.categoriesRepository
+      .save(newCategory)
+      .then((savedCategory) => savedCategory)
+      .catch((error) => {
+        if (error instanceof QueryFailedError && error.message.includes('unique constraint')) {
+          throw new BadRequestException(new ResponseException(ERRORS_DICTIONARY.UNIQUE_CONSTRAINT));
+        }
 
-    const newCategory = await this.categoriesRepository.create(createCategoryDto);
-
-    await this.categoriesRepository.save(newCategory);
-
-    return newCategory;
+        throw error;
+      });
   }
 
   async findAll(
@@ -51,57 +43,62 @@ export class CategoriesService {
 
     const skip = (page - 1) * limit;
 
-    const [data, total] = await this.categoriesRepository.findAndCount({
-      where: whereConditions,
-      withDeleted: false,
-      skip: skip,
-      take: limit
-    });
+    return await this.categoriesRepository
+      .findAndCount({
+        where: whereConditions,
+        withDeleted: false,
+        skip: skip,
+        take: limit
+      })
+      .then(([records, total]) => {
+        const totalPages = Math.ceil(total / limit);
 
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      data,
-      total,
-      page,
-      limit,
-      totalPages
-    };
+        return {
+          records,
+          total,
+          page,
+          limit,
+          totalPages
+        };
+      });
   }
 
   async findOne(id: UUID) {
-    const categoryData = await this.categoriesRepository.findOne({ where: { id }, withDeleted: false });
+    return await this.categoriesRepository
+      .findOne({ where: { id }, withDeleted: false })
+      .then((categoryData) => {
+        if (!categoryData) {
+          throw new BadRequestException(
+            new ResponseException(ERRORS_DICTIONARY.NOT_FOUND_ANY_CATEGORY, [
+              `Not found any category has id=${id} in DB`
+            ])
+          );
+        }
 
-    if (!categoryData) {
-      throw new HttpException(
-        new ResponseException(ERRORS_DICTIONARY.NOT_FOUND_ANY_CATEGORY, [
-          `Not found any category has id=${id} in DB`
-        ]),
-        HttpStatus.NOT_FOUND
-      );
-    }
-
-    return categoryData;
+        return categoryData;
+      });
   }
 
-  async update(id: UUID, updateCategoryDto: UpdateCategoryDto) {
-    return await this.findOne(id)
-      .then(async () => {
-        const updateResult = await this.categoriesRepository.update(id, updateCategoryDto);
-
-        return updateResult.affected;
+  async update(id: UUID, updateCategoryDto: UpdateCategoryDto): Promise<UpdateResult> {
+    return await this.categoriesRepository
+      .update(id, updateCategoryDto)
+      .then(async (UpdateResult) => {
+        return UpdateResult;
       })
       .catch((error) => {
+        if (error instanceof QueryFailedError && error.message.includes('unique constraint')) {
+          throw new BadRequestException(new ResponseException(ERRORS_DICTIONARY.UNIQUE_CONSTRAINT));
+        }
+
         throw error;
       });
   }
 
-  async remove(id: UUID) {
-    return await this.findOne(id)
-      .then(async () => {
-        const updateResult = await this.categoriesRepository.softDelete(id);
-
-        return updateResult.affected;
+  async remove(id: UUID): Promise<UpdateResult> {
+    return await this.categoriesRepository
+      .softDelete(id)
+      .then(async (UpdateResult) => {
+        return UpdateResult;
       })
       .catch((error) => {
         throw error;
