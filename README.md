@@ -88,4 +88,4 @@ nest g res login
 
 ## use Authorize to function
 - use this annotation @UseGuards(JwtAuthGuard, RolesGuard) on class ...Controller
-- use this annotation @Roles('admin') on function, route (ex: You want to for everyone to use. dont use this anotation is oke )
+- use this annotation @SetMetaData('role', ['admin']) on function, route (ex: You want to for everyone to use. dont use this anotation is oke )
