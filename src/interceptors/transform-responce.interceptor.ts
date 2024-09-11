@@ -13,11 +13,6 @@ export class TransformInterceptor<T> implements NestInterceptor<T> {
         statusCode:statusCode,
         data
       })),
-      catchError(err =>{
-        const statusCode = err instanceof HttpException ? err.getStatus() : 500;
-        return throwError(() => new HttpException({}, statusCode));
-        // return throwError(() => new Response(false, null, err));
-      })
     );
   }
 }

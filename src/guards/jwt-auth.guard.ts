@@ -10,12 +10,12 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-
   constructor(
+    private jwtService: JwtService,
     @InjectRepository(User)
-    // private readonly userRepository: Repository<User>,
-    private configService: ApiConfigService,
-    private reflector: Reflector, private jwtService: JwtService) {}
+    private readonly userRepository: Repository<User>,
+    private configService: ApiConfigService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -26,18 +26,21 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verify(token, {secret: this.configService.getString("JWT_SECRET_KEY")});
-      // const user = await this.userRepository.findOneBy(payload.userId)
+      const payload = this.jwtService.verify(token, {
+        secret: this.configService.getString('JWT_SECRET_KEY')
+      });
+      const user = await this.userRepository.findOneBy({
+        id: payload.userId
+      });
 
-      // if(!user) {
-      //   throw new BadRequestException(ERRORS_DICTIONARY.TOKEN_ERROR);
-      // }
-
-      request['user'] = payload;
+      if (!user) {
+        throw new BadRequestException(ERRORS_DICTIONARY.TOKEN_ERROR);
+      }
+      request.user = payload;
 
       return true;
-    } catch(error) {
-      throw new BadRequestException(error.message)
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
   }
 

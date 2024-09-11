@@ -121,7 +121,11 @@ export class UserService {
     const teacher = await this.teacherRepository.findTeacherByUserId(userId);
     if (teacher) {
       return teacher;
+    } else {
+      throw new BadRequestException({
+        message:ERRORS_DICTIONARY.USER_NOT_FOUND
+      })
     }
-    return null;
+  
   }
 }
