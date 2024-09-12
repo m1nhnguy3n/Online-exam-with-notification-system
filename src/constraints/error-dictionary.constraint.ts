@@ -7,13 +7,12 @@ export enum ERRORS_DICTIONARY {
   VALIDATION_ERROR = 'ValidationError',
   //
   AUTHORIZE_ERROR = "You're not authorize",
-  TOKEN_ERROR = "Token invalid",
-
+  TOKEN_ERROR = 'Token invalid',
 
   //QUESTION
   CREATE_QUESTION_FAIL = 'Create question fail',
-  QUESTION_NOT_FOUND='Question not found',
+  QUESTION_NOT_FOUND = 'Question not found',
 
   //author
-  NOT_RIGHTS ='Not rights'
+  NOT_RIGHTS = 'Not rights'
 }

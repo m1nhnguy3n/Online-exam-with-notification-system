@@ -16,14 +16,14 @@ export class AuthController {
     if (response.status !== 200) {
       return {
         statusCode: response.status,
-        message: response.message,
+        message: response.message
       };
     }
 
     return {
       statusCode: 200,
       data: response.data,
-      message: response.message,
+      message: response.message
     };
   }
 }

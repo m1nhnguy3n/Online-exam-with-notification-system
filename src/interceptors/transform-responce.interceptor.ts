@@ -1,7 +1,6 @@
 import { CallHandler, ExecutionContext, HttpException, Injectable, NestInterceptor } from '@nestjs/common';
 import { catchError, map, Observable, throwError } from 'rxjs';
 
-
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<T> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -10,9 +9,9 @@ export class TransformInterceptor<T> implements NestInterceptor<T> {
     const statusCode = response.statusCode;
     return next.handle().pipe(
       map((data) => ({
-        statusCode:statusCode,
+        statusCode: statusCode,
         data
-      })),
+      }))
     );
   }
 }

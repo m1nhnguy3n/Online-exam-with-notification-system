@@ -53,7 +53,7 @@ export class QuestionsService {
 
     if (!user) {
       throw new ForbiddenException({
-        message:ERRORS_DICTIONARY.NOT_RIGHTS
+        message: ERRORS_DICTIONARY.NOT_RIGHTS
       });
     }
     if (foundUser.role === 'teacher') {
@@ -86,7 +86,7 @@ export class QuestionsService {
   }
 
   async remove(questionId: UUID) {
-    const question=await this.getOneOrExist(questionId)
+    const question = await this.getOneOrExist(questionId);
     const obj = await this.questionRepository.softDelete(questionId);
     return obj;
   }
@@ -101,6 +101,6 @@ export class QuestionsService {
         message: ERRORS_DICTIONARY.QUESTION_NOT_FOUND
       });
     }
-    return question
+    return question;
   }
 }

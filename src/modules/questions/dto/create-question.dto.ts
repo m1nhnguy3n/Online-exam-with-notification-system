@@ -1,7 +1,7 @@
-import { Expose } from "class-transformer";
-import { IsEnum, IsString } from "class-validator";
-import { UUID } from "crypto";
-import { QuestionType } from "src/entities/enums/question-type.enum";
+import { Expose } from 'class-transformer';
+import { IsEnum, IsString } from 'class-validator';
+import { UUID } from 'crypto';
+import { QuestionType } from 'src/entities/enums/question-type.enum';
 
 export class CreateQuestionDto {
   @Expose()

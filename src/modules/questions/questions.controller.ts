@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query, UseInterceptors, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Request,
+  Query,
+  UseInterceptors,
+  UseGuards
+} from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
@@ -10,13 +22,11 @@ import { TransformInterceptor } from 'src/interceptors/transform-responce.interc
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/decorators/get-user.decorator';
 
-
-
 @ApiTags('Questions')
 @Controller('questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) { }
-  
+  constructor(private readonly questionsService: QuestionsService) {}
+
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@User() user, @Body() createQuestionDto: CreateQuestionDto) {
