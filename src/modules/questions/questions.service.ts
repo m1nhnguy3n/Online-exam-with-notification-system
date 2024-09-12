@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { Question } from 'src/entities/question.entity';
 import { Teacher } from 'src/entities/teacher.entity';
 import { Category } from 'src/entities/category.entity';
-import { UserService } from '../user/user.service';
+import { UsersService } from '../users/users.service';
 import { UUID } from 'crypto';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { Paginate } from './dto/paginate.dto';
@@ -15,11 +15,11 @@ import { Paginate } from './dto/paginate.dto';
 export class QuestionsService {
   constructor(
     @InjectRepository(Question) private questionRepository: Repository<Question>,
-    private userService: UserService
+    private userService: UsersService
   ) {}
 
   async create(user: any, createQuestionDto: CreateQuestionDto): Promise<Question> {
-    const { id } = await this.userService.findOneTeacherByUserId(user.userId);
+    const { teacher } = await this.userService.findOne(user.id);
     const { categoryId, content, type } = createQuestionDto;
     const question = this.questionRepository.create({
       content: content,
@@ -28,7 +28,7 @@ export class QuestionsService {
         id: categoryId
       },
       teacher: {
-        id: id
+        id: teacher.id
       }
     });
 
@@ -46,6 +46,7 @@ export class QuestionsService {
   }
 
   async getAllQuestions(user: any, dto: Paginate) {
+    const foundUser = await this.userService.findOne(user.id);
     const limit = dto.limit;
     const offset = (dto.page - 1) * limit;
     const query = this.questionRepository.createQueryBuilder('question').limit(limit).offset(offset);
@@ -55,8 +56,9 @@ export class QuestionsService {
         message:ERRORS_DICTIONARY.NOT_RIGHTS
       });
     }
-    if (user.role === 'teacher') {
-      const teacher = await this.userService.findOneTeacherByUserId(user.userId);
+    if (foundUser.role === 'teacher') {
+      // const { teacher } = await this.userService.findOne(user);
+      const teacher = foundUser.teacher;
       return query
         .innerJoinAndSelect('question.teacher', 'teacher')
         .select(['question.type', 'question.content'])

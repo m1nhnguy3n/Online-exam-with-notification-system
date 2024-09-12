@@ -15,8 +15,9 @@ import { User } from 'src/decorators/get-user.decorator';
 @ApiTags('Questions')
 @Controller('questions')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
-
+  constructor(private readonly questionsService: QuestionsService) { }
+  
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@User() user, @Body() createQuestionDto: CreateQuestionDto) {
     return await this.questionsService.create(user, createQuestionDto);
