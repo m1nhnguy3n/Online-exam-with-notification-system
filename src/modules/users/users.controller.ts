@@ -1,9 +1,19 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('users')
 @ApiTags('Users')
@@ -13,6 +23,7 @@ export class UsersController {
 
   @Get()
   @ApiOkResponse({ description: 'Get all users successfully' })
+  @UseGuards(JwtAuthGuard)
   async findAll() {
     return await this.usersService.findAll();
   }
