@@ -15,7 +15,7 @@ export class TeachersRepository {
 
     return await this.teachersRepository.save(teacherData);
   }
-  
+
   async update(teacherId, subject): Promise<UpdateResult> {
     return this.teachersRepository.update(teacherId, { subject });
   }
