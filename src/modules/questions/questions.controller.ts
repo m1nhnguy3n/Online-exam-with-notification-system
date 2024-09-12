@@ -46,14 +46,12 @@ export class QuestionsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':questionId')
-  @UseInterceptors(TransformInterceptor)
   async remove(@Param() dto: FindOneQuestionDTO) {
     return await this.questionsService.remove(dto.questionId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('')
-  @UseInterceptors(TransformInterceptor)
   async getAllQuestion(@User() user, @Query() dto: Paginate) {
     const data = await this.questionsService.getAllQuestions(user, dto);
     return data;

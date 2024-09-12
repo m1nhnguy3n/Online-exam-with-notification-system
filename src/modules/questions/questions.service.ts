@@ -41,10 +41,6 @@ export class QuestionsService {
     return newQuestion;
   }
 
-  findAll() {
-    return `This action returns all questions`;
-  }
-
   async getAllQuestions(user: any, dto: Paginate) {
     const foundUser = await this.userService.findOne(user.id);
     const limit = dto.limit;
