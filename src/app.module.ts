@@ -6,11 +6,11 @@ import { GlobalException } from './exceptions/global.exception';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { ClassesModule } from './modules/classes/classes.module';
+import { QuestionsModule } from './modules/questions/questions.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
-import { QuestionsModule } from './modules/questions/questions.module';
-import { ClassesModule } from './modules/classes/classes.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
