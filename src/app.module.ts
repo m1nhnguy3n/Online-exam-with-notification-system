@@ -6,6 +6,7 @@ import { GlobalException } from './exceptions/global.exception';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { TeachersModule } from './modules/teachers/teachers.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -23,7 +24,8 @@ import { SharedModule } from './shared/shared.module';
       inject: [ApiConfigService]
     }),
     UsersModule,
-    AuthModule
+    AuthModule,
+    TeachersModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

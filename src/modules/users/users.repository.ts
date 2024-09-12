@@ -18,7 +18,6 @@ export class UsersRepository {
     const user = await this.usersRepository.create(createUserDto);
 
     return await this.usersRepository.save(user);
-
   }
 
   async findAllUser(): Promise<User[]> {
@@ -32,10 +31,10 @@ export class UsersRepository {
       }
     });
   }
-  async findUserById(id: UUID): Promise<User> {
+  async findUserById(userId: UUID): Promise<User> {
     return await this.usersRepository.findOne({
       where: {
-        id
+        id: userId
       },
       relations: {
         teacher: true,
