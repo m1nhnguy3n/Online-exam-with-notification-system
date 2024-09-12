@@ -55,7 +55,7 @@ export class UpdateUserDto {
   @IsOptional()
   @ApiProperty({
     description: 'Active of account',
-    example: 'true'
+    example: true
   })
   isActive: boolean;
 }
