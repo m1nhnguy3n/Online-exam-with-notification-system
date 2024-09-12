@@ -33,8 +33,9 @@ export class QuestionsController {
     return await this.questionsService.create(user, createQuestionDto);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') dto: FindOneQuestionDTO) {
+  @UseGuards(JwtAuthGuard)
+  @Get(':questionId')
+  async findOne(@Param() dto: FindOneQuestionDTO) {
     return await this.questionsService.findOne(dto.questionId);
   }
 
@@ -43,9 +44,10 @@ export class QuestionsController {
     return this.questionsService.update(+id, updateQuestionDto);
   }
 
-  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Delete(':questionId')
   @UseInterceptors(TransformInterceptor)
-  async remove(@Param('id') dto: FindOneQuestionDTO) {
+  async remove(@Param() dto: FindOneQuestionDTO) {
     return await this.questionsService.remove(dto.questionId);
   }
 
