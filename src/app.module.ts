@@ -15,6 +15,7 @@ import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { StudentsModule } from './modules/students/students.module';
+import { OptionsModule } from './modules/options/options.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,7 +37,8 @@ import { StudentsModule } from './modules/students/students.module';
     TeachersModule,
     StudentsModule,
     CategoriesModule,
-    ClassesModule
+    ClassesModule,
+    OptionsModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
