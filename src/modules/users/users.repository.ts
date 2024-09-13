@@ -31,10 +31,10 @@ export class UsersRepository {
       }
     });
   }
-  async findUserById(id: UUID): Promise<User> {
+  async findUserById(userId: UUID): Promise<User> {
     return await this.usersRepository.findOne({
       where: {
-        id
+        id: userId
       },
       relations: {
         teacher: true,
