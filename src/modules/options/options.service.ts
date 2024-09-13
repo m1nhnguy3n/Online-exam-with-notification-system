@@ -89,10 +89,10 @@ export class OptionsService {
   }
 
   async remove(optionId: UUID) {
-    await this.findOneOrThrow(optionId)
+    await this.findOneOrThrow(optionId);
     return await this.optionRepository.softDelete(optionId);
   }
-  
+
   async getAllOptionByQuestionId(questionId: UUID) {
     try {
       const options = await this.optionRepository
