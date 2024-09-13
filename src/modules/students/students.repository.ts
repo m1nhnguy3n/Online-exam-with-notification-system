@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { Student } from 'src/entities/student.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class StudentsRepository {
@@ -19,11 +19,11 @@ export class StudentsRepository {
     return studentCreated;
   }
 
-  async update(id: UUID, parentNumber: string) {
+  async update(id: UUID, parentNumber: string): Promise<UpdateResult> {
     return this.studentsRepository.update(id, { parentNumber });
   }
 
-  async delete(userId: UUID) {
+  async delete(userId: UUID): Promise<UpdateResult> {
     return this.studentsRepository.softDelete({ user: { id: userId } });
   }
 }
