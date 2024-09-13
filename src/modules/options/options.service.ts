@@ -51,6 +51,7 @@ export class OptionsService {
         }
       }
     }
+
     if (type === QuestionType.MULTIPLE_CHOICES) {
       optionIns = this.optionRepository.create({
         content: content,
