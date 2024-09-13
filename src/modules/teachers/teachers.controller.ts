@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseInterceptors
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -14,6 +15,7 @@ import { UUID } from 'crypto';
 import { User } from 'src/entities/user.entity';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { UpdateResult } from 'typeorm';
+import { UserPaginationDto } from '../users/dto/user-pagination.dto';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { TeachersService } from './teachers.service';
@@ -32,8 +34,8 @@ export class TeachersController {
 
   @Get()
   @ApiOkResponse({ description: 'Get all teachers successfully' })
-  async findAll(): Promise<User[]> {
-    return await this.teachersService.findAll();
+  async findAll(@Query() userPagination: UserPaginationDto) {
+    return await this.teachersService.findAll(userPagination);
   }
 
   @Get(':id')
@@ -52,6 +54,7 @@ export class TeachersController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({ description: 'Deleted teacher successfully' })
   async remove(@Param('id', ParseUUIDPipe) id: UUID): Promise<UpdateResult> {
     return await this.teachersService.remove(id);
   }

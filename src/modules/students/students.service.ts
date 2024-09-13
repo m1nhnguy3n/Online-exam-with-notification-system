@@ -6,6 +6,7 @@ import { User } from 'src/entities/user.entity';
 import { UserExistsException } from 'src/exceptions/users/userExisted.exception';
 import { UserNotFoundException } from 'src/exceptions/users/userNotFound.excetion';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UserPaginationDto } from '../users/dto/user-pagination.dto';
 import { UsersRepository } from '../users/users.repository';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { StudentsRepository } from './students.repository';
@@ -37,8 +38,8 @@ export class StudentsService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.findAllStudent();
+  async findAll(userPagination: UserPaginationDto) {
+    return await this.usersRepository.findAllStudent(userPagination);
   }
 
   async findOne(userId: UUID) {
