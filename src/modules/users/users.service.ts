@@ -1,17 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { UUID } from 'crypto';
 import { UserNotFoundException } from 'src/exceptions/users/userNotFound.excetion';
 import { UpdateResult } from 'typeorm';
 import { User } from '../../entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPaginationDto } from './dto/user-pagination.dto';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.findAllUser();
+  async findAll(userPagination: UserPaginationDto) {
+    return await this.usersRepository.findAllUser(userPagination);
   }
 
   async findOne(userId: UUID): Promise<User> {

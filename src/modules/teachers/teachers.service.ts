@@ -9,6 +9,7 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersRepository } from '../users/users.repository';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { TeachersRepository } from './teachers.repository';
+import { UserPaginationDto } from '../users/dto/user-pagination.dto';
 
 @Injectable()
 export class TeachersService {
@@ -36,8 +37,8 @@ export class TeachersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    const teacher = await this.usersRepository.findAllTeacher();
+  async findAll(userPagination: UserPaginationDto) {
+    const teacher = await this.usersRepository.findAllTeacher(userPagination);
 
     if (!teacher) {
       throw new UserNotFoundException();

@@ -5,15 +5,17 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPaginationDto } from './dto/user-pagination.dto';
 import { UsersService } from './users.service';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('users')
 @ApiTags('Users')
@@ -23,9 +25,9 @@ export class UsersController {
 
   @Get()
   @ApiOkResponse({ description: 'Get all users successfully' })
-  @UseGuards(JwtAuthGuard)
-  async findAll() {
-    return await this.usersService.findAll();
+  // @UseGuards(JwtAuthGuard)
+  async findAll(@Query() userPagination: UserPaginationDto) {
+    return await this.usersService.findAll(userPagination);
   }
 
   @Get(':id')
