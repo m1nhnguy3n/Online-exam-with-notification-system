@@ -13,8 +13,6 @@ export enum ERRORS_DICTIONARY {
   CREATE_QUESTION_FAIL = 'Create question fail',
   QUESTION_NOT_FOUND = 'Question not found',
 
-  //author
-  NOT_RIGHTS = 'Not rights',
   // CLASS ENTITY
   NOT_FOUND_ANY_CLASS = 'Not found any class',
   UNIQUE_CONSTRAINT = 'Unique constraint',
