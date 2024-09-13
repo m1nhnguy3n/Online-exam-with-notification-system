@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { OptionsModule } from './modules/options/options.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { QuestionsModule } from './modules/questions/questions.module';
     }),
     UsersModule,
     AuthModule,
-    QuestionsModule
+    QuestionsModule,
+    OptionsModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
