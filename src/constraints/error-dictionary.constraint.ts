@@ -13,12 +13,19 @@ export enum ERRORS_DICTIONARY {
   CREATE_QUESTION_FAIL = 'Create question fail',
   QUESTION_NOT_FOUND = 'Question not found',
 
-  //author
-  NOT_RIGHTS = 'Not rights',
   // CLASS ENTITY
   NOT_FOUND_ANY_CLASS = 'Not found any class',
   UNIQUE_CONSTRAINT = 'Unique constraint',
   NOT_RECORD_WAS_DELETED = 'NOT record was deleted',
 
-  NOT_FOUND_ANY_CATEGORY = 'Not found any category'
+  NOT_FOUND_ANY_CATEGORY = 'Not found any category',
+  // EXAM
+  EXAM_NOT_FOUND = 'Exam not found',
+  EXAM_NAME_EXIST = 'Exam name already exists',
+  //Option
+  CREATE_OPTION_FAIL = 'Create question fail',
+  OPTION_NOT_FOUND = 'Option not found',
+
+  //
+  NOT_RIGHTS = 'Not rights'
 }
