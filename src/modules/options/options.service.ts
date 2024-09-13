@@ -3,29 +3,25 @@ import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
 import { Option } from 'src/entities/option.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { UUID } from 'crypto';
 import { QuestionsService } from '../questions/questions.service';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { QuestionType } from 'src/entities/enums/question-type.enum';
-import e from 'express';
-import { FindOneOptionDTO } from './dto/find-one-option.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class OptionsService {
   constructor(
     @InjectRepository(Option) private optionRepository: Repository<Option>,
-    private userService: UserService,
+    private userService: UsersService,
     private questionService: QuestionsService
   ) {}
-  async create(userId: UUID, dto: CreateOptionDto) {
-    await this.userService.findOneTeacherByUserId(userId);
-
+  async create(user: any, dto: CreateOptionDto) {
+    await this.userService.findOne(user.id);
     const { content, isCorrect, questionId } = dto;
     const options = await this.getAllOptionByQuestionId(questionId);
     const { type } = await this.questionService.getOneOrExist(questionId);
-
     var optionIns: Option = null;
 
     if (type === QuestionType.SINGLE_CHOICE) {
@@ -55,6 +51,7 @@ export class OptionsService {
         }
       }
     }
+
     if (type === QuestionType.MULTIPLE_CHOICES) {
       optionIns = this.optionRepository.create({
         content: content,
@@ -82,8 +79,8 @@ export class OptionsService {
     });
     if (!foundOption) {
       throw new BadRequestException({
-        message:ERRORS_DICTIONARY.OPTION_NOT_FOUND
-      })
+        message: ERRORS_DICTIONARY.OPTION_NOT_FOUND
+      });
     }
     return foundOption;
   }
@@ -92,11 +89,12 @@ export class OptionsService {
     return `This ation updates a #${id} option`;
   }
 
-  async remove(optionId:UUID) {
+  async remove(optionId: UUID) {
     await this.findOneOrThrow(optionId);
     const obj = await this.optionRepository.softDelete(optionId);
     return obj;
   }
+
   async getAllOptionByQuestionId(questionId: UUID) {
     try {
       const options = await this.optionRepository

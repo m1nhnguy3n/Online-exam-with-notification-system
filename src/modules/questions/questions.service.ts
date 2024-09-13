@@ -4,8 +4,6 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question } from 'src/entities/question.entity';
-import { Teacher } from 'src/entities/teacher.entity';
-import { Category } from 'src/entities/category.entity';
 import { UsersService } from '../users/users.service';
 import { UUID } from 'crypto';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';

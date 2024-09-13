@@ -5,14 +5,12 @@ export class CreateOptionDto {
   @Expose()
   @IsString()
   content: string;
-  
+
   @Expose()
   @IsBoolean()
-  isCorrect:boolean; 
-  
+  isCorrect: boolean;
+
   @Expose()
   @IsString()
   questionId: UUID;
 }
-
-
