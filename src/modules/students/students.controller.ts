@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
 import { User } from 'src/entities/user.entity';
@@ -6,6 +6,7 @@ import { UpdateResult } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { StudentsService } from './students.service';
+import { UserPaginationDto } from '../users/dto/user-pagination.dto';
 
 @ApiTags('Students')
 @Controller('students')
@@ -18,8 +19,8 @@ export class StudentsController {
   }
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return await this.studentsService.findAll();
+  async findAll(@Query() userPagination: UserPaginationDto) {
+    return await this.studentsService.findAll(userPagination);
   }
 
   @Get(':id')

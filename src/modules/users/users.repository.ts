@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { Role } from 'src/entities/enums/role.enum';
 import { User } from 'src/entities/user.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { ILike, Like, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPaginationDto } from './dto/user-pagination.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -20,8 +21,27 @@ export class UsersRepository {
     return await this.usersRepository.save(user);
   }
 
-  async findAllUser(): Promise<User[]> {
-    return await this.usersRepository.find();
+  async findAllUser(userPagination: UserPaginationDto) {
+    const { page, take, firstName, lastName } = userPagination;
+
+    const takeData = take || 10;
+
+    const skip = (page - 1) * take;
+
+    const [items, count] = await this.usersRepository.findAndCount({
+      relations: {
+        student: true,
+        teacher: true
+      },
+      where: {
+        firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
+        lastName: lastName ? ILike(`%${lastName}%`) : Like(`%%`)
+      },
+      take: takeData,
+      skip
+    });
+
+    return { items, count };
   }
 
   async findUserByEmail(email: string): Promise<User> {
@@ -54,14 +74,24 @@ export class UsersRepository {
     });
   }
 
-  async findAllTeacher(): Promise<User[]> {
-    return await this.usersRepository.find({
+  async findAllTeacher(userPagination: UserPaginationDto) {
+    const { page, take, firstName, lastName } = userPagination;
+
+    const takeData = take || 10;
+
+    const skip = (page - 1) * take;
+
+    return await this.usersRepository.findAndCount({
       where: {
-        role: Role.TEACHER
+        role: Role.TEACHER,
+        firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
+        lastName: lastName ? ILike(`%${lastName}%`) : Like(`%%`)
       },
       relations: {
         teacher: true
-      }
+      },
+      take: takeData,
+      skip
     });
   }
 
@@ -76,14 +106,24 @@ export class UsersRepository {
     });
   }
 
-  async findAllStudent(): Promise<User[]> {
-    return await this.usersRepository.find({
+  async findAllStudent(userPagination: UserPaginationDto) {
+    const { page, take, firstName, lastName } = userPagination;
+
+    const takeData = take || 10;
+
+    const skip = (page - 1) * take;
+
+    return await this.usersRepository.findAndCount({
       where: {
-        role: Role.STUDENT
+        role: Role.STUDENT,
+        firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
+        lastName: lastName ? ILike(`%${lastName}%`) : Like(`%%`)
       },
       relations: {
         student: true
-      }
+      },
+      take: takeData,
+      skip
     });
   }
 
