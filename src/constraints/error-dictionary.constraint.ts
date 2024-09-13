@@ -15,5 +15,8 @@ export enum ERRORS_DICTIONARY {
 
   //Option
   CREATE_OPTION_FAIL = 'Create question fail',
-  OPTION_NOT_FOUND='Option not found'
+  OPTION_NOT_FOUND = 'Option not found',
+
+  //
+  NOT_RIGHTS = 'Not rights'
 }
