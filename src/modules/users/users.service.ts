@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UUID } from 'crypto';
 import { UserNotFoundException } from 'src/exceptions/users/userNotFound.excetion';
@@ -8,6 +8,7 @@ import { User } from '../../entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
 import { UsersRepository } from './users.repository';
+import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 
 @Injectable()
 export class UsersService {
@@ -50,6 +51,17 @@ export class UsersService {
     return await this.usersRepository.update(userId, updateUserDto);
   }
 
+  async updatePassword(newPassword: string, userId: UUID) {
+    await this.findOne(userId);
+    const raw = await this.usersRepository.updatePassword(newPassword, userId);
+    if (raw === 0) {
+      throw new BadRequestException({
+        message: ERRORS_DICTIONARY.RESET_PASSWORD_FAIL
+      });
+    }
+    return raw;
+  }
+  
   async createInitialUser() {
     // Check if the user exists
     const existingUser = await this.usersRepository.findUserByEmail('admin@gmail.com');
@@ -63,4 +75,5 @@ export class UsersService {
       await this.usersRepository.createUser(newUser);
     }
   }
+  
 }
