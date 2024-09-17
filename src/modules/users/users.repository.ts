@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { Role } from 'src/entities/enums/role.enum';
@@ -7,6 +7,7 @@ import { ILike, Like, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
+import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 
 @Injectable()
 export class UsersRepository {
@@ -81,7 +82,7 @@ export class UsersRepository {
 
     const skip = (page - 1) * take;
 
-    return await this.usersRepository.findAndCount({
+    const [items, count] = await this.usersRepository.findAndCount({
       where: {
         role: Role.TEACHER,
         firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
@@ -93,6 +94,7 @@ export class UsersRepository {
       take: takeData,
       skip
     });
+    return { items, count };
   }
 
   async findOneStudent(userId: UUID): Promise<User> {
@@ -113,7 +115,7 @@ export class UsersRepository {
 
     const skip = (page - 1) * take;
 
-    return await this.usersRepository.findAndCount({
+    const [items, count] = await this.usersRepository.findAndCount({
       where: {
         role: Role.STUDENT,
         firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
@@ -125,6 +127,11 @@ export class UsersRepository {
       take: takeData,
       skip
     });
+
+    return {
+      items,
+      count
+    };
   }
 
   async update(userId: UUID, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
@@ -135,5 +142,24 @@ export class UsersRepository {
 
   async delete(userId: UUID): Promise<UpdateResult> {
     return await this.usersRepository.softDelete(userId);
+  }
+  async updatePassword(newPassword: string, userId: UUID) {
+    const foundUser = await this.findUserById(userId);
+    if (!foundUser) {
+      throw new BadRequestException({
+        message: ERRORS_DICTIONARY.USER_NOT_FOUND
+      });
+    }
+    foundUser.password = newPassword;
+    const { raw } = await this.usersRepository.update(
+      {
+        id: userId
+      },
+      {
+        password: newPassword
+      }
+    );
+
+    return raw;
   }
 }
