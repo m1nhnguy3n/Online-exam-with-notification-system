@@ -1,9 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserNotFoundException } from 'src/exceptions/users/userNotFound.excetion';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,23 +10,21 @@ export class AuthService {
     private readonly usersService: UsersService
   ) {}
 
-  async login(loginDto: LoginDto) {
-    const user = await this.usersService.findOneByEmail(loginDto.email);
+  async login(user: any) {
+    const payload = { sub: user.id, role: user.role };
 
-    if (!user) {
-      throw new UserNotFoundException();
+    return { access_token: this.jwtService.sign(payload) };
+  }
+
+  async validateUser(email, password) {
+    const user = await this.usersService.findOneByEmail(email);
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!user || !isPasswordValid) {
+      return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
-
-    if (!isPasswordValid) {
-      throw new BadRequestException('The email or password is incorrect.');
-    }
-
-    const payload = { userId: user.id, role: user.role };
-
-    const token = this.jwtService.sign(payload);
-
-    return token;
+    return user;
   }
 }

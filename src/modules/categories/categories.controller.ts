@@ -23,7 +23,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth('JWT-auth')
+@ApiBearerAuth('jwt')
 @ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {

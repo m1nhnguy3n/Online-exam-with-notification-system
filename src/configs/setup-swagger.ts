@@ -17,11 +17,11 @@ export function configSwagger(app: INestApplication) {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        name: 'JWT',
-        description: 'Enter JWT token',
+        name: 'Authorization',
+        description: 'Enter your JWT token',
         in: 'header'
       },
-      'JWT-auth'
+      'jwt'
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -41,10 +41,10 @@ export function configSwagger(app: INestApplication) {
     function unauthorizedResponse(): void {
       if (http_adapter.getType() === 'fastify') {
         res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Bearer');
+        res.setHeader('WWW-Authenticate', 'Basic');
       } else {
         res.status(401);
-        res.set('WWW-Authenticate', 'Bearer');
+        res.set('WWW-Authenticate', 'Basic');
       }
 
       next();
