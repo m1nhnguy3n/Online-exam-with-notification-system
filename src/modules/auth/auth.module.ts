@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { LocalStrategy } from './passport/local.strategy';
+import { MailService } from 'src/shared/services/mail.service';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { LocalStrategy } from './passport/local.strategy';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy]
+  providers: [AuthService, MailService]
 })
 export class AuthModule {}

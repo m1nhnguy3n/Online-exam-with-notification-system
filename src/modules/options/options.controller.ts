@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Request,
+  UseGuards,
+  ParseUUIDPipe
+} from '@nestjs/common';
 import { OptionsService } from './options.service';
 import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
@@ -11,7 +23,6 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/entities/enums/role.enum';
 import { RolesGuard } from 'src/guards/roles.guard';
 
-@Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 @Controller('options')
@@ -25,9 +36,16 @@ export class OptionsController {
     const option = await this.optionsService.create(user, dto);
     return option;
   }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOptionDto: UpdateOptionDto) {
-    return this.optionsService.update(+id, updateOptionDto);
+  @Roles(Role.TEACHER)
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: UUID,
+    @User() user,
+    @Body() updateOptionDto: UpdateOptionDto
+  ) {
+    return await this.optionsService.update(id, user, updateOptionDto);
   }
 
   @UseGuards(JwtAuthGuard)
